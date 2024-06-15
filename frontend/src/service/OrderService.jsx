@@ -6,33 +6,33 @@ export const OrderService = {
         product_name: 'James Butt',
         date: '2015-09-13',
         status: 'Em aberto',
-        client: {
+        representative: {
           name: 'Ioni Bowcher',
-          sex: 'm'
+          image: 'ionibowcher.png'
         },
-        value: 7066323
+        price: 7066323
       },
       {
         id: 1001,
         product_name: 'Josephine Darakjy',
         date: '2019-02-09',
         status: 'Pago',
-        client: {
+        representative: {
           name: 'Amy Elsner',
-          sex: 'f'
+          image: 'amyelsner.png'
         },
-        value: 82429
+        price: 82429
       },
       {
         id: 1002,
         product_name: 'Art Venere',
         date: '2017-05-13',
         status: 'Cancelado',
-        client: {
+        representative: {
           name: 'Asiya Javayant',
-          sex: 'm'
+          image: 'asiyajavayant.png'
         },
-        value: 9.99
+        price: 9.99
       }
     ]
   },
