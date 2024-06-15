@@ -52,7 +52,6 @@
     border-color: #f1f1f1 !important;
     color: #662ba0 !important;
 }
-
 .btn-color-3{
     background: #6e8cce !important;
     border-color: #6e8cce !important;
@@ -64,6 +63,12 @@
     color: white;
 }
 
+.card {
+    background: var(--surface-card);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
 
 body{
     margin: 0;

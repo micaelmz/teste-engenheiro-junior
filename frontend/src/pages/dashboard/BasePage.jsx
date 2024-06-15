@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import maleUserIllustration from '../../assets/img/male-user-illustration.webp';
+import maleUserIllustration from '../../assets/img/user-illustration.webp';
 import {Typography} from "@mui/material";
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import SideMenu from "../../components/sideMenu";
