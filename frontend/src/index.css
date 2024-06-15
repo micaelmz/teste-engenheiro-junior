@@ -21,12 +21,17 @@
     color: white;
 }
 
-.container-fullvh {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.btn-color-2{
+    background: #dadada !important;
+    border-color: #dadada !important;
+    color: #662ba0 !important;
 }
+.btn-color-2:hover{
+    background: #f1f1f1 !important;
+    border-color: #f1f1f1 !important;
+    color: #662ba0 !important;
+}
+
 
 body{
     margin: 0;
