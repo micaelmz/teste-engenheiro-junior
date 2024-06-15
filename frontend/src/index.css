@@ -1,0 +1,35 @@
+*{
+    font-family: Roboto, sans-serif;
+}
+
+.poppins{
+    font-family: 'Poppins', sans-serif;
+}
+
+.roboto{
+    font-family: 'Roboto', sans-serif;
+}
+
+.btn-color-1{
+    background: #8458b2 !important;
+    border-color: #8458b2 !important;
+    color: white;
+}
+.btn-color-1:hover{
+    background: #662ba0 !important;
+    border-color: #662ba0 !important;
+    color: white;
+}
+
+.container-fullvh {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(90deg, #1b1351, #662ba0);
+}
