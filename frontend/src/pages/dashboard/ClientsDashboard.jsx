@@ -12,12 +12,13 @@ import {MultiSelect} from 'primereact/multiselect';
 import {Slider} from 'primereact/slider';
 import {Tag} from 'primereact/tag';
 import {ClientService} from '../../service/ClientService';
-import {Typography} from "@mui/material";
-import {InputGroup} from "react-bootstrap";
+import {Modal, Typography} from "@mui/material";
+import {Col, InputGroup, Row} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import maleUserIllustration from '../../assets/img/male-client-illustration.png';
 import femaleUserIllustration from '../../assets/img/female-client-illustration.png';
+import {Link} from "react-router-dom";
 
 
 export default function ClientsDashboard() {
@@ -28,20 +29,63 @@ export default function ClientsDashboard() {
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [sortField, setSortField] = useState(null);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [sortOrder, setSortOrder] = useState(null);
-  const [representatives] = useState([
-    {name: 'Amy Elsner', image: 'amyelsner.png'},
-    {name: 'Anna Fali', image: 'annafali.png'},
-    {name: 'Asiya Javayant', image: 'asiyajavayant.png'},
-    {name: 'Bernardo Dominic', image: 'bernardodominic.png'},
-    {name: 'Elwin Sharvill', image: 'elwinsharvill.png'},
-    {name: 'Ioni Bowcher', image: 'ionibowcher.png'},
-    {name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png'},
-    {name: 'Onyama Limba', image: 'onyamalimba.png'},
-    {name: 'Stephen Shaw', image: 'stephenshaw.png'},
-    {name: 'XuXue Feng', image: 'xuxuefeng.png'}
-  ]);
+  const handleOpenModal = () => setIsOpenModal(true);
+  const handleCloseModal = () => {
+    resetEditingNow();
+    setIsOpenModal(false);
+  };
+  const [editingNow, setEditingNow] = useState({
+    id: 0,
+    name: '',
+    sex: '',
+    document: '',
+    email: '',
+    tel: '',
+    location: {
+      city: '',
+      state: {
+        name: '',
+        code: ''
+      },
+      cep: '',
+      street_name: ''
+    },
+    birthday: '',
+    joined: '',
+    last_activity: '',
+    status: '',
+    spent: 0,
+    serasa_score: 0
+  });
   const [statuses] = useState(['active', 'pending', 'inactive']);
+
+  const resetEditingNow = () => {
+    setEditingNow({
+      id: 0,
+      name: '',
+      sex: '',
+      document: '',
+      email: '',
+      tel: '',
+      location: {
+        city: '',
+        state: {
+          name: '',
+          code: ''
+        },
+        cep: '',
+        street_name: ''
+      },
+      birthday: '',
+      joined: '',
+      last_activity: '',
+      status: '',
+      spent: 0,
+      serasa_score: 0
+    })
+  }
 
   const getSeverity = (status) => {
     switch (status) {
@@ -63,6 +107,20 @@ export default function ClientsDashboard() {
     });
     initFilters();
   }, []);
+
+  const handleDocumentInputChange = (e) => {
+    let {value} = e.target;
+
+    value = value.replace(/\D/g, '');
+
+    if (value.length <= 11) {
+      value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    } else {
+      value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+    }
+
+    setEditingNow({...editingNow, document: value});
+  };
 
   const getCustomers = (data) => {
     const processedData = [...(data || [])].map((d) => {
@@ -89,13 +147,13 @@ export default function ClientsDashboard() {
 
   const initFilters = () => {
     setFilters({
-      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      id: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      joined: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-      spent: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-      status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-      serasa_score: { value: null, matchMode: FilterMatchMode.BETWEEN },
-      'location.state.name': { value: null, matchMode: FilterMatchMode.IN } // Alterado para 'location.state.name'
+      global: {value: null, matchMode: FilterMatchMode.CONTAINS},
+      id: {value: null, matchMode: FilterMatchMode.CONTAINS},
+      joined: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.DATE_IS}]},
+      spent: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
+      status: {operator: FilterOperator.OR, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
+      serasa_score: {value: null, matchMode: FilterMatchMode.BETWEEN},
+      'location.state.name': {value: null, matchMode: FilterMatchMode.IN} // Alterado para 'location.state.name'
     });
     setGlobalFilterValue('');
     setSortField('id');
@@ -142,7 +200,7 @@ export default function ClientsDashboard() {
   }
 
 
-  const representativeBodyTemplate = (rowData) => {
+  const clientBodyTemplate = (rowData) => {
     const {name, sex} = rowData;
 
     return (
@@ -160,15 +218,6 @@ export default function ClientsDashboard() {
   const idBodyTemplate = (rowData) => {
     return <span className="fw-bold">{rowData.id}</span>
   }
-
-  const representativesItemTemplate = (option) => {
-    return (
-        <div className="flex align-items-center gap-2">
-          <img alt={option.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${option.image}`} width="32"/>
-          <span>{option.name}</span>
-        </div>
-    );
-  };
 
   const joinedBodyTemplate = (rowData) => {
     let date = new Date(rowData.joined);
@@ -264,8 +313,8 @@ export default function ClientsDashboard() {
                   setSortOrder(e.sortOrder);
                 }}
                 showFilterMatchModes={false}
-                filterMenuStyle={{ width: '2rem' }}
-                style={{ minWidth: '2rem' }}
+                filterMenuStyle={{width: '2rem'}}
+                style={{minWidth: '2rem'}}
                 body={idBodyTemplate}
             />
             <Column
@@ -282,7 +331,7 @@ export default function ClientsDashboard() {
                 showFilterMatchModes={false}
                 filterMenuStyle={{width: '14rem'}}
                 style={{minWidth: '14rem'}}
-                body={representativeBodyTemplate}
+                body={clientBodyTemplate}
             />
             <Column
                 header="Ingresso"
@@ -329,7 +378,24 @@ export default function ClientsDashboard() {
                           icon="pi pi-cog"
                           className="p-button-rounded rounded-5 btn-color-1-light p-mr-2"
                           onClick={() => {
-                            console.log('Editar', rowData);
+                            setEditingNow(rowData);
+                            handleOpenModal();
+                          }}
+                      />
+                    </div>
+                )}
+            />
+            <Column
+                headerStyle={{width: '8rem'}}
+                bodyStyle={{textAlign: 'center'}}
+                body={(rowData) => (
+                    <div className="d-flex justify-content-center">
+                      <Button
+                          icon="pi pi-trash"
+                          className="p-button-rounded rounded-5 btn-color-4 p-mr-2"
+                          onClick={() => {
+                            // modal de confirmacao
+                            // service de deletar
                           }}
                       />
                     </div>
@@ -337,6 +403,125 @@ export default function ClientsDashboard() {
             />
           </DataTable>
         </div>
+
+        <Modal
+            open={isOpenModal}
+            onClose={handleCloseModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+          <div className="base-modal">
+            <Form className="w-100 mx-auto">
+              <p className="text-white poppins fw-bold fs-3 w-100 ">
+                Atualizando dados do cliente {editingNow.name}
+              </p>
+
+              <input name="id" type="hidden" value={editingNow.id}></input>
+
+              <Row>
+                <Col>
+                  <Form.Group className="mb-3" controlId="formBasicText">
+                    <Form.Label style={{color: "#c5c5c5"}}>Nome</Form.Label>
+                    <Form.Control name="name" type="text" value={editingNow.name.split(" ")[0]}/>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-3" controlId="formBasicText">
+                    <Form.Label style={{color: "#c5c5c5"}}>Sobrenome</Form.Label>
+                    <Form.Control name="surname" type="text" value={editingNow.name.split(" ")[1]}/>
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col xs={8}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label style={{color: "#c5c5c5"}}>Endereço de email</Form.Label>
+                    <Form.Control name="email" type="email" value={editingNow.email}/>
+                  </Form.Group>
+                </Col>
+                <Col xs={4}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label style={{color: "#c5c5c5"}}>Telefone</Form.Label>
+                    <Form.Control name="tel" type="tel" value={editingNow.tel}/>
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col xs={5}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label style={{color: "#c5c5c5"}}>CPF / CNPJ</Form.Label>
+                    <Form.Control
+                        name="document"
+                        type="text"
+                        value={editingNow.document}
+                        onChange={handleDocumentInputChange}
+                        maxLength={18}/>
+                  </Form.Group>
+                </Col>
+                <Col xs={4}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label style={{color: "#c5c5c5"}}>Data de Nascimento</Form.Label>
+                    <Form.Control
+                        name="birthday"
+                        type="date"
+                        value={editingNow.birthday}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={3}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label style={{color: "#c5c5c5"}}>Sexo</Form.Label>
+                    <Form.Select name="sex">
+                      <option value="m" selected={editingNow.sex === 'm'}>Masculino</option>
+                      <option value="f" selected={editingNow.sex === 'f'}>Feminino</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col xs={4}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label style={{color: "#c5c5c5"}}>Cidade</Form.Label>
+                    <Form.Control
+                        name="city"
+                        type="text"
+                        value={editingNow.location.city}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col xs={4}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label style={{color: "#c5c5c5"}}>Estado</Form.Label>
+                    <Form.Select name="state">
+                      {ClientService.getBrazilianStates().map((state) => (
+                          <option value={state.code}>
+                            {state.name}
+                          </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col xs={4}>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label style={{color: "#c5c5c5"}}>CEP</Form.Label>
+                    <Form.Control
+                        name="cep"
+                        type="text"
+                        value={editingNow.location.cep}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <hr/>
+              <Button type="submit" className="btn-color-1 rounded-3">
+                Atualizar
+              </Button>
+            </Form>
+          </div>
+        </Modal>
       </BasePage>
   );
 }

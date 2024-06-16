@@ -33,7 +33,7 @@ export const ClientService = {
         id: 1000,
         name: 'Micael Muniz',
         sex: 'm',
-        cpf: '000.000.000-00',
+        document: '000.000.000-00',
         email: 'contato@micaelmuniz.com',
         tel: '75 99999-9999',
         location: {
@@ -56,7 +56,7 @@ export const ClientService = {
         id: 1001,
         name: 'Maria Silva',
         sex: 'f',
-        cpf: '111.111.111-11',
+        document: '111.111.111-11',
         email: 'maria.silva@example.com',
         tel: '11 98888-8888',
         location: {
@@ -79,7 +79,7 @@ export const ClientService = {
         id: 1002,
         name: 'João Pereira',
         sex: 'm',
-        cpf: '222.222.222-22',
+        document: '222.222.222-22',
         email: 'joao.pereira@example.com',
         tel: '21 97777-7777',
         location: {

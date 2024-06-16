@@ -72,6 +72,16 @@
     border-color: #1b52ce !important;
     color: white;
 }
+.btn-color-4{
+    background: #f65050 !important;
+    border-color: #f65050 !important;
+    color: white;
+}
+.btn-color-4:hover{
+    background: #ec1414 !important;
+    border-color: #ec1414 !important;
+    color: white;
+}
 
 .card {
     background: var(--surface-card);
@@ -93,7 +103,7 @@
     transform: translate(-50%, -50%);
     background: linear-gradient(90deg, #1b1351, #662ba0);
     color: white;
-    padding: 2rem;
+    padding: 4rem;
     border-radius: 10px;
 }
 
