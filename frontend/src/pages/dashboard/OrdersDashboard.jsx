@@ -101,7 +101,7 @@ export default function OrdersDashboard() {
         operator: FilterOperator.AND,
         constraints: [{value: null, matchMode: FilterMatchMode.STARTS_WITH}]
       },
-      client: { value: null, matchMode: FilterMatchMode.IN },
+      client: {value: null, matchMode: FilterMatchMode.IN},
       date: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.DATE_IS}]},
       price: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
       status: {operator: FilterOperator.OR, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
@@ -121,13 +121,13 @@ export default function OrdersDashboard() {
   };
 
   const clientFilterTemplate = (options) => {
-    return <MultiSelect value={options.value} options={clients} itemTemplate={clientsItemTemplate} onChange={(e) => options.filterCallback(e.value)} optionLabel="name" placeholder="Any" className="p-column-filter" />;
+    return <MultiSelect value={options.value} options={clients} itemTemplate={clientsItemTemplate} onChange={(e) => options.filterCallback(e.value)} optionLabel="name" placeholder="Any" className="p-column-filter"/>;
   };
 
   const clientsItemTemplate = (option) => {
     return (
         <div className="flex align-items-center gap-2">
-          <img alt={option.name} src={option.sex === 'm' ? maleUserIllustration : femaleUserIllustration}  width="32" />
+          <img alt={option.name} src={option.sex === 'm' ? maleUserIllustration : femaleUserIllustration} width="32"/>
           <span className="ms-2">{option.name}</span>
         </div>
     );
@@ -164,11 +164,11 @@ export default function OrdersDashboard() {
   return (
       <BasePage fabShow>
         <div className="card">
-          <Typography variant="h6" className="text-black poppins fw-bold mb-5">Lista de todos os pedidos</Typography>
+          <Typography variant="h6" className="text-black poppins fw-bold mb-4">Lista de todos os pedidos</Typography>
           <InputGroup className="mb-3">
             <Form.Control placeholder="Digite sua pesquisa"/>
             <Button className="btn-color-1 rounded-4 rounded-start">
-              <SearchOutlinedIcon />
+              <SearchOutlinedIcon/>
             </Button>
           </InputGroup>
           <DataTable
@@ -193,11 +193,11 @@ export default function OrdersDashboard() {
                 header="Cliente"
                 filterField="client"
                 showFilterMatchModes={false}
-                filterMenuStyle={{ width: '14rem' }}
-                style={{ minWidth: '14rem' }}
+                filterMenuStyle={{width: '14rem'}}
+                style={{minWidth: '14rem'}}
                 body={clientBodyTemplate}
                 filter
-                filterElement={clientFilterTemplate} />
+                filterElement={clientFilterTemplate}/>
 
             <Column
                 header="Data"
@@ -241,7 +241,7 @@ export default function OrdersDashboard() {
                       />
                     </div>
                 )}
-/>
+            />
           </DataTable>
         </div>
       </BasePage>

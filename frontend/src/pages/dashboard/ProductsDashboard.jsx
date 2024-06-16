@@ -18,7 +18,7 @@ export default function ProductsDashboard() {
   return (
       <BasePage fabShow>
         <div className="card">
-          <Typography variant="h6" className="text-black poppins fw-bold">Todos os produtos</Typography>
+          <Typography variant="h6" className="text-black poppins mb-2 fw-bold">Todos os produtos</Typography>
           <Typography variant="h7" className="text-black-50 poppins fw-bold mb-4">Clique em um produto para ver detalhes</Typography>
           <InputGroup className="mb-4">
             <Form.Control placeholder="Digite sua pesquisa"/>
