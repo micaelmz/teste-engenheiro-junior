@@ -233,7 +233,7 @@ export default function OrdersDashboard() {
                 body={(rowData) => (
                     <div className="d-flex justify-content-center">
                       <Button
-                          icon="pi pi-pencil"
+                          icon="pi pi-cog"
                           className="p-button-rounded rounded-5 btn-color-1-light p-mr-2"
                           onClick={() => {
                             console.log('Editar', rowData);
