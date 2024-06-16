@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import BasePage from './BasePage';
-import { classNames } from 'primereact/utils';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { InputText } from 'primereact/inputtext';
-import { IconField } from 'primereact/iconfield';
-import { InputIcon } from 'primereact/inputicon';
-import { Dropdown } from 'primereact/dropdown';
-import { InputNumber } from 'primereact/inputnumber';
-import { Button } from 'primereact/button';
-import { ProgressBar } from 'primereact/progressbar';
-import { Calendar } from 'primereact/calendar';
-import { MultiSelect } from 'primereact/multiselect';
-import { Slider } from 'primereact/slider';
-import { Tag } from 'primereact/tag';
-import { TriStateCheckbox } from 'primereact/tristatecheckbox';
-import { CustomerService } from '../../service/CustomerService';
+import {classNames} from 'primereact/utils';
+import {FilterMatchMode, FilterOperator} from 'primereact/api';
+import {DataTable} from 'primereact/datatable';
+import {Column} from 'primereact/column';
+import {InputText} from 'primereact/inputtext';
+import {IconField} from 'primereact/iconfield';
+import {InputIcon} from 'primereact/inputicon';
+import {Dropdown} from 'primereact/dropdown';
+import {InputNumber} from 'primereact/inputnumber';
+import {Button} from 'primereact/button';
+import {ProgressBar} from 'primereact/progressbar';
+import {Calendar} from 'primereact/calendar';
+import {MultiSelect} from 'primereact/multiselect';
+import {Slider} from 'primereact/slider';
+import {Tag} from 'primereact/tag';
+import {TriStateCheckbox} from 'primereact/tristatecheckbox';
+import {CustomerService} from '../../service/CustomerService';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 
 export default function ClientsDashboard() {
@@ -26,16 +28,16 @@ export default function ClientsDashboard() {
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [representatives] = useState([
-    { name: 'Amy Elsner', image: 'amyelsner.png' },
-    { name: 'Anna Fali', image: 'annafali.png' },
-    { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
-    { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
-    { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
-    { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
-    { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
-    { name: 'Onyama Limba', image: 'onyamalimba.png' },
-    { name: 'Stephen Shaw', image: 'stephenshaw.png' },
-    { name: 'XuXue Feng', image: 'xuxuefeng.png' }
+    {name: 'Amy Elsner', image: 'amyelsner.png'},
+    {name: 'Anna Fali', image: 'annafali.png'},
+    {name: 'Asiya Javayant', image: 'asiyajavayant.png'},
+    {name: 'Bernardo Dominic', image: 'bernardodominic.png'},
+    {name: 'Elwin Sharvill', image: 'elwinsharvill.png'},
+    {name: 'Ioni Bowcher', image: 'ionibowcher.png'},
+    {name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png'},
+    {name: 'Onyama Limba', image: 'onyamalimba.png'},
+    {name: 'Stephen Shaw', image: 'stephenshaw.png'},
+    {name: 'XuXue Feng', image: 'xuxuefeng.png'}
   ]);
   const [statuses] = useState(['unqualified', 'qualified', 'new', 'negotiation', 'renewal']);
 
@@ -83,7 +85,7 @@ export default function ClientsDashboard() {
   };
 
   const formatCurrency = (value) => {
-    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
   };
 
   const clearFilter = () => {
@@ -92,7 +94,7 @@ export default function ClientsDashboard() {
 
   const onGlobalFilterChange = (e) => {
     const value = e.target.value;
-    let _filters = { ...filters };
+    let _filters = {...filters};
 
     _filters['global'].value = value;
 
@@ -102,15 +104,18 @@ export default function ClientsDashboard() {
 
   const initFilters = () => {
     setFilters({
-      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-      'country.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-      representative: { value: null, matchMode: FilterMatchMode.IN },
-      date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-      balance: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-      status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-      activity: { value: null, matchMode: FilterMatchMode.BETWEEN },
-      verified: { value: null, matchMode: FilterMatchMode.EQUALS }
+      global: {value: null, matchMode: FilterMatchMode.CONTAINS},
+      name: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.STARTS_WITH}]},
+      'country.name': {
+        operator: FilterOperator.AND,
+        constraints: [{value: null, matchMode: FilterMatchMode.STARTS_WITH}]
+      },
+      representative: {value: null, matchMode: FilterMatchMode.IN},
+      date: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.DATE_IS}]},
+      balance: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
+      status: {operator: FilterOperator.OR, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
+      activity: {value: null, matchMode: FilterMatchMode.BETWEEN},
+      verified: {value: null, matchMode: FilterMatchMode.EQUALS}
     });
     setGlobalFilterValue('');
   };
@@ -119,7 +124,7 @@ export default function ClientsDashboard() {
   const countryBodyTemplate = (rowData) => {
     return (
         <div className="flex align-items-center gap-2">
-          <img alt="flag" src="https://primefaces.org/cdn/primereact/images/flag/flag_placeholder.png" className={`flag flag-${rowData.country.code}`} style={{ width: '24px' }} />
+          <img alt="flag" src="https://primefaces.org/cdn/primereact/images/flag/flag_placeholder.png" className={`flag flag-${rowData.country.code}`} style={{width: '24px'}}/>
           <span>{rowData.country.name}</span>
         </div>
     );
@@ -142,20 +147,20 @@ export default function ClientsDashboard() {
 
     return (
         <div className="flex align-items-center gap-2">
-          <img alt={representative.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${representative.image}`} width="32" />
+          <img alt={representative.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${representative.image}`} width="32"/>
           <span>{representative.name}</span>
         </div>
     );
   };
 
   const representativeFilterTemplate = (options) => {
-    return <MultiSelect value={options.value} options={representatives} itemTemplate={representativesItemTemplate} onChange={(e) => options.filterCallback(e.value)} optionLabel="name" placeholder="Any" className="p-column-filter" />;
+    return <MultiSelect value={options.value} options={representatives} itemTemplate={representativesItemTemplate} onChange={(e) => options.filterCallback(e.value)} optionLabel="name" placeholder="Any" className="p-column-filter"/>;
   };
 
   const representativesItemTemplate = (option) => {
     return (
         <div className="flex align-items-center gap-2">
-          <img alt={option.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${option.image}`} width="32" />
+          <img alt={option.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${option.image}`} width="32"/>
           <span>{option.name}</span>
         </div>
     );
@@ -166,7 +171,7 @@ export default function ClientsDashboard() {
   };
 
   const dateFilterTemplate = (options) => {
-    return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />;
+    return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999"/>;
   };
 
   const balanceBodyTemplate = (rowData) => {
@@ -174,23 +179,23 @@ export default function ClientsDashboard() {
   };
 
   const balanceFilterTemplate = (options) => {
-    return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="USD" locale="en-US" />;
+    return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="USD" locale="en-US"/>;
   };
 
   const statusBodyTemplate = (rowData) => {
-    return <Tag value={rowData.status} severity={getSeverity(rowData.status)} />;
+    return <Tag value={rowData.status} severity={getSeverity(rowData.status)}/>;
   };
 
   const statusFilterTemplate = (options) => {
-    return <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterCallback(e.value, options.index)} itemTemplate={statusItemTemplate} placeholder="Select One" className="p-column-filter" showClear />;
+    return <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterCallback(e.value, options.index)} itemTemplate={statusItemTemplate} placeholder="Select One" className="p-column-filter" showClear/>;
   };
 
   const statusItemTemplate = (option) => {
-    return <Tag value={option} severity={getSeverity(option)} />;
+    return <Tag value={option} severity={getSeverity(option)}/>;
   };
 
   const activityBodyTemplate = (rowData) => {
-    return <ProgressBar value={rowData.activity} showValue={false} style={{ height: '6px' }}></ProgressBar>;
+    return <ProgressBar value={rowData.activity} showValue={false} style={{height: '6px'}}></ProgressBar>;
   };
 
   const activityFilterTemplate = (options) => {
@@ -206,7 +211,10 @@ export default function ClientsDashboard() {
   };
 
   const verifiedBodyTemplate = (rowData) => {
-    return <i className={classNames('pi', { 'text-green-500 pi-check-circle': rowData.verified, 'text-red-500 pi-times-circle': !rowData.verified })}></i>;
+    return <i className={classNames('pi', {
+      'text-green-500 pi-check-circle': rowData.verified,
+      'text-red-500 pi-times-circle': !rowData.verified
+    })}></i>;
   };
 
   const verifiedFilterTemplate = (options) => {
@@ -215,29 +223,29 @@ export default function ClientsDashboard() {
           <label htmlFor="verified-filter" className="font-bold">
             Verified
           </label>
-          <TriStateCheckbox inputId="verified-filter" value={options.value} onChange={(e) => options.filterCallback(e.value)} />
+          <TriStateCheckbox inputId="verified-filter" value={options.value} onChange={(e) => options.filterCallback(e.value)}/>
         </div>
     );
   };
 
 
   return (
-      <BasePage>
+      <BasePage fabShow>
         <div className="card">
           <DataTable value={customers} paginator showGridlines rows={10} loading={loading} dataKey="id"
                      filters={filters} globalFilterFields={['name', 'country.name', 'representative.name', 'balance', 'status']}
                      emptyMessage="No customers found.">
-            <Column field="name" header="Name" filter filterPlaceholder="Search by name" style={{ minWidth: '12rem' }} />
-            <Column header="Country" filterField="country.name" style={{ minWidth: '12rem' }} body={countryBodyTemplate}
+            <Column field="name" header="Name" filter filterPlaceholder="Search by name" style={{minWidth: '12rem'}}/>
+            <Column header="Country" filterField="country.name" style={{minWidth: '12rem'}} body={countryBodyTemplate}
                     filter filterPlaceholder="Search by country" filterClear={filterClearTemplate}
-                    filterApply={filterApplyTemplate} filterFooter={filterFooterTemplate} />
-            <Column header="Agent" filterField="representative" showFilterMatchModes={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    body={representativeBodyTemplate} filter filterElement={representativeFilterTemplate} />
-            <Column header="Date" filterField="date" dataType="date" style={{ minWidth: '10rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-            <Column header="Balance" filterField="balance" dataType="numeric" style={{ minWidth: '10rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
-            <Column field="status" header="Status" filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '12rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
-            <Column field="activity" header="Activity" showFilterMatchModes={false} style={{ minWidth: '12rem' }} body={activityBodyTemplate} filter filterElement={activityFilterTemplate} />
-            <Column field="verified" header="Verified" dataType="boolean" bodyClassName="text-center" style={{ minWidth: '8rem' }} body={verifiedBodyTemplate} filter filterElement={verifiedFilterTemplate} />
+                    filterApply={filterApplyTemplate} filterFooter={filterFooterTemplate}/>
+            <Column header="Agent" filterField="representative" showFilterMatchModes={false} filterMenuStyle={{width: '14rem'}} style={{minWidth: '14rem'}}
+                    body={representativeBodyTemplate} filter filterElement={representativeFilterTemplate}/>
+            <Column header="Date" filterField="date" dataType="date" style={{minWidth: '10rem'}} body={dateBodyTemplate} filter filterElement={dateFilterTemplate}/>
+            <Column header="Balance" filterField="balance" dataType="numeric" style={{minWidth: '10rem'}} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate}/>
+            <Column field="status" header="Status" filterMenuStyle={{width: '14rem'}} style={{minWidth: '12rem'}} body={statusBodyTemplate} filter filterElement={statusFilterTemplate}/>
+            <Column field="activity" header="Activity" showFilterMatchModes={false} style={{minWidth: '12rem'}} body={activityBodyTemplate} filter filterElement={activityFilterTemplate}/>
+            <Column field="verified" header="Verified" dataType="boolean" bodyClassName="text-center" style={{minWidth: '8rem'}} body={verifiedBodyTemplate} filter filterElement={verifiedFilterTemplate}/>
           </DataTable>
         </div>
       </BasePage>

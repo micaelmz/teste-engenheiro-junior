@@ -162,7 +162,7 @@ export default function OrdersDashboard() {
   };
 
   return (
-      <BasePage>
+      <BasePage fabShow>
         <div className="card">
           <Typography variant="h6" className="text-black poppins fw-bold mb-5">Lista de todos os pedidos</Typography>
           <InputGroup className="mb-3">

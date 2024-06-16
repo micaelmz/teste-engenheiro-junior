@@ -80,6 +80,11 @@
     margin-bottom: 1rem;
 }
 
+.product-img{
+    width: 17rem;
+    height: 17rem;
+}
+
 body{
     margin: 0;
     padding: 0;
