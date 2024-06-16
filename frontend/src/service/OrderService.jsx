@@ -6,9 +6,9 @@ export const OrderService = {
         product_name: 'James Butt',
         date: '2015-09-13',
         status: 'Em aberto',
-        representative: {
+        client: {
           name: 'Ioni Bowcher',
-          image: 'ionibowcher.png'
+          sex: 'm'
         },
         price: 7066323
       },
@@ -17,9 +17,9 @@ export const OrderService = {
         product_name: 'Josephine Darakjy',
         date: '2019-02-09',
         status: 'Pago',
-        representative: {
+        client: {
           name: 'Amy Elsner',
-          image: 'amyelsner.png'
+          sex: 'f'
         },
         price: 82429
       },
@@ -28,17 +28,21 @@ export const OrderService = {
         product_name: 'Art Venere',
         date: '2017-05-13',
         status: 'Cancelado',
-        representative: {
+        client: {
           name: 'Asiya Javayant',
-          image: 'asiyajavayant.png'
+          sex: 'f'
         },
         price: 9.99
       }
     ]
   },
 
-  getAllCustomersName() {
-    return Promise.resolve(this.getData().map(item => item.client.name));
+  getAllClientsNameAndSex() {
+    return Promise.resolve(this.getData().map(d => {
+      return {
+        name: d.client,
+      };
+    }));
   },
 
   getCustomersSmall() {

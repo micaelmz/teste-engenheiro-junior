@@ -26,19 +26,10 @@ export default function OrdersDashboard() {
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [statuses] = useState(['Em aberto', 'Pago', 'Cancelado']);
-  const [clientNames, setClientNames] = useState([]); // novo estado para armazenar os nomes dos clientes
-
-  const [representatives] = useState([
-    {name: 'Amy Elsner', image: 'amyelsner.png'},
-    {name: 'Anna Fali', image: 'annafali.png'},
-    {name: 'Asiya Javayant', image: 'asiyajavayant.png'},
-    {name: 'Bernardo Dominic', image: 'bernardodominic.png'},
-    {name: 'Elwin Sharvill', image: 'elwinsharvill.png'},
-    {name: 'Ioni Bowcher', image: 'ionibowcher.png'},
-    {name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png'},
-    {name: 'Onyama Limba', image: 'onyamalimba.png'},
-    {name: 'Stephen Shaw', image: 'stephenshaw.png'},
-    {name: 'XuXue Feng', image: 'xuxuefeng.png'}
+  const [clients, setclients] = useState([
+    {name: 'Amy Elsner', sex: 'f'},
+    {name: 'Asiya Javayant', sex: 'f'},
+    {name: 'Ioni Bowcher', sex: 'm'}
   ]);
 
   const getSeverity = (status) => {
@@ -103,7 +94,7 @@ export default function OrdersDashboard() {
         operator: FilterOperator.AND,
         constraints: [{value: null, matchMode: FilterMatchMode.STARTS_WITH}]
       },
-      representative: { value: null, matchMode: FilterMatchMode.IN },
+      client: { value: null, matchMode: FilterMatchMode.IN },
       date: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.DATE_IS}]},
       price: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
       status: {operator: FilterOperator.OR, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
@@ -112,26 +103,25 @@ export default function OrdersDashboard() {
   };
 
 
-  const representativeBodyTemplate = (rowData) => {
-    const representative = rowData.representative;
-
+  const clientBodyTemplate = (rowData) => {
+    const client = rowData.client;
     return (
         <div className="flex align-items-center gap-2">
-          <img alt={representative.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${representative.image}`} width="32" />
-          <span>{representative.name}</span>
+          <img alt={client.name} src={client.sex === 'm' ? maleUserIllustration : femaleUserIllustration} width="32"/>
+          <span className="ps-2">{client.name}</span>
         </div>
     );
   };
 
-  const representativeFilterTemplate = (options) => {
-    return <MultiSelect value={options.value} options={representatives} itemTemplate={representativesItemTemplate} onChange={(e) => options.filterCallback(e.value)} optionLabel="name" placeholder="Any" className="p-column-filter" />;
+  const clientFilterTemplate = (options) => {
+    return <MultiSelect value={options.value} options={clients} itemTemplate={clientsItemTemplate} onChange={(e) => options.filterCallback(e.value)} optionLabel="name" placeholder="Any" className="p-column-filter" />;
   };
 
-  const representativesItemTemplate = (option) => {
+  const clientsItemTemplate = (option) => {
     return (
         <div className="flex align-items-center gap-2">
           <img alt={option.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${option.image}`} width="32" />
-          <span>{option.name}</span>
+          <span className="ms-2">{option.name}</span>
         </div>
     );
   };
@@ -185,8 +175,15 @@ export default function OrdersDashboard() {
                 filterPlaceholder="Buscar por produto"
                 style={{minWidth: '18rem'}}
             />
-            <Column header="Agent" filterField="representative" showFilterMatchModes={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                    body={representativeBodyTemplate} filter filterElement={representativeFilterTemplate} />
+            <Column
+                header="Cliente"
+                filterField="client"
+                showFilterMatchModes={false}
+                filterMenuStyle={{ width: '14rem' }}
+                style={{ minWidth: '14rem' }}
+                body={clientBodyTemplate}
+                filter
+                filterElement={clientFilterTemplate} />
 
             <Column
                 header="Data"
