@@ -10,8 +10,7 @@ import DonutLargeOutlinedIcon from '@mui/icons-material/DonutLargeOutlined';
 import {Button} from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import { useLocation } from 'react-router-dom';
-
+import {useLocation} from 'react-router-dom';
 
 
 export default function SideMenu() {
@@ -21,13 +20,13 @@ export default function SideMenu() {
 
   return (
       <Row>
-        <ul className="list-unstyled w-100">
+        <ul className="list-unstyled w-100" style={{minHeight: "86vh"}}>
           <Typography variant="h8" className="ms-1 text-xs font-medium text-black roboto">
             Dashboard
           </Typography>
           <li className={`px-3 py-2 ${currentPage === '/dashboard' ? 'bg-color-1-gradient' : 'bg-color-2'} w-100 rounded-3 my-1 hover-bg-color-1`}>
             <Link to="/dashboard" className="text-decoration-none text-black d-block p-2 d-flex">
-            <DonutLargeOutlinedIcon className="text-color-1 me-3 my-auto"/>
+              <DonutLargeOutlinedIcon className="text-color-1 me-3 my-auto"/>
               <Typography variant="h8" className="my-auto text-color-1 poppins fw-semibold">
                 Dashboard
               </Typography>
@@ -61,13 +60,14 @@ export default function SideMenu() {
               </Typography>
             </Link>
           </li>
+          <hr/>
+          <div className="d-flex justify-content-center">
+            <Button className="btn-color-1 bg-color-35 border-0 fw-semibold w-50" style={{height: "50px", marginTop: "2rem"}}>
+              <LogoutOutlinedIcon/>
+              Sair
+            </Button>
+          </div>
         </ul>
-        <div className="d-flex justify-content-center">
-          <Button className="btn-color-1 bg-color-35 border-0 fw-semibold -mb-52 w-50" style={{height: "20%"}}>
-            <LogoutOutlinedIcon/>
-            Sair
-          </Button>
-        </div>
       </Row>
   );
 }

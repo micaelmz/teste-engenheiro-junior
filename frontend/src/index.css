@@ -41,6 +41,16 @@
     border-color: #662ba0 !important;
     color: white;
 }
+.btn-color-1-light{
+    background: #aa8ec7 !important;
+    border-color: #aa8ec7 !important;
+    color: white;
+}
+.btn-color-1-light:hover{
+    background: #662ba0 !important;
+    border-color: #662ba0 !important;
+    color: white;
+}
 
 .btn-color-2{
     background: #dadada !important;

@@ -15,9 +15,12 @@ import {Tag} from 'primereact/tag';
 import {TriStateCheckbox} from 'primereact/tristatecheckbox';
 import maleUserIllustration from '../../assets/img/male-client-illustration.png';
 import femaleUserIllustration from '../../assets/img/female-client-illustration.png';
-
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
 import {OrderService} from '../../service/OrderService';
+import {Typography} from "@mui/material";
+import {InputGroup} from "react-bootstrap";
+import Form from 'react-bootstrap/Form';
 
 
 export default function OrdersDashboard() {
@@ -161,6 +164,13 @@ export default function OrdersDashboard() {
   return (
       <BasePage>
         <div className="card">
+          <Typography variant="h6" className="text-black poppins fw-bold mb-5">Lista de todos os pedidos</Typography>
+          <InputGroup className="mb-3">
+            <Form.Control placeholder="Digite sua pesquisa"/>
+            <Button className="btn-color-1 rounded-4 rounded-start">
+              <SearchOutlinedIcon />
+            </Button>
+          </InputGroup>
           <DataTable
               value={orders}
               paginator
@@ -217,9 +227,23 @@ export default function OrdersDashboard() {
                 filterElement={statusFilterTemplate}
             />
             {/* coluna com action pra abrir um modal de edicao ou deletar item */}
+            <Column
+                headerStyle={{width: '8rem'}}
+                bodyStyle={{textAlign: 'center'}}
+                body={(rowData) => (
+                    <div className="d-flex justify-content-center">
+                      <Button
+                          icon="pi pi-pencil"
+                          className="p-button-rounded rounded-5 btn-color-1-light p-mr-2"
+                          onClick={() => {
+                            console.log('Editar', rowData);
+                          }}
+                      />
+                    </div>
+                )}
+/>
           </DataTable>
         </div>
-        );
       </BasePage>
   );
 }

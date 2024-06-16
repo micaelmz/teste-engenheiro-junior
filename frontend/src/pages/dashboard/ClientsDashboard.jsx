@@ -240,7 +240,6 @@ export default function ClientsDashboard() {
             <Column field="verified" header="Verified" dataType="boolean" bodyClassName="text-center" style={{ minWidth: '8rem' }} body={verifiedBodyTemplate} filter filterElement={verifiedFilterTemplate} />
           </DataTable>
         </div>
-        );
       </BasePage>
   );
 }

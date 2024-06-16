@@ -34,8 +34,8 @@ export default function BasePage({children}) {
           {/* =============== FIM BARRA DE NAVEGAÇAO SUPERIOR =============== */}
           <Row>
             {/* =============== INICIO MENU LATERAL =============== */}
-            <Col xs={2} className="bg-color-1 d-flex bg-color-2" style={{minHeight: "88vh"}}>
-              <SideMenu/>
+            <Col xs={2} className="bg-color-1 bg-color-2">
+              <SideMenu />
             </Col>
             {/* =============== FIM MENU LATERAL =============== */}
 
