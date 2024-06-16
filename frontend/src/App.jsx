@@ -3,7 +3,6 @@ import {Routes, Route} from 'react-router-dom';
 
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './flags.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 
 import Home from './pages/Home';

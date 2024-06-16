@@ -18,7 +18,7 @@ import femaleUserIllustration from '../../assets/img/female-client-illustration.
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
 import {OrderService} from '../../service/OrderService';
-import {Typography} from "@mui/material";
+import {Modal, Typography} from "@mui/material";
 import {InputGroup} from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 
@@ -29,6 +29,12 @@ export default function OrdersDashboard() {
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [statuses] = useState(['Em aberto', 'Pago', 'Cancelado']);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const handleOpenModal = () => setIsOpenModal(true);
+  const handleCloseModal = () => setIsOpenModal(false);
+  const [editingNow, setEditingNow] = useState(null);
+
+
   const [clients, setClients] = useState([
     {name: 'Amy Elsner', sex: 'f'},
     {name: 'Asiya Javayant', sex: 'f'},
@@ -236,7 +242,8 @@ export default function OrdersDashboard() {
                           icon="pi pi-cog"
                           className="p-button-rounded rounded-5 btn-color-1-light p-mr-2"
                           onClick={() => {
-                            console.log('Editar', rowData);
+                            setEditingNow(rowData);
+                            handleOpenModal();
                           }}
                       />
                     </div>
@@ -244,6 +251,22 @@ export default function OrdersDashboard() {
             />
           </DataTable>
         </div>
+
+        <Modal
+            open={isOpenModal}
+            onClose={handleCloseModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+          <div className="base-modal">
+            <Typography id="modal-modal-title" className="poppins" variant="h6" component="h2">
+              Atualizar pedido
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            </Typography>
+          </div>
+        </Modal>
       </BasePage>
   );
 }

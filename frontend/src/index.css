@@ -3,11 +3,11 @@
 }
 
 .poppins{
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif !important;
 }
 
 .roboto{
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif !important;
 }
 
 .bg-color-1{
@@ -83,6 +83,18 @@
 .product-img{
     width: 17rem;
     height: 17rem;
+}
+
+.base-modal{
+    width: 50%;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(90deg, #1b1351, #662ba0);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
 }
 
 body{
