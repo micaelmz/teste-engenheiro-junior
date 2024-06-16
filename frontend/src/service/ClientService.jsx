@@ -25,80 +25,29 @@ import flagSantaCatarina from '../assets/img/flags_brazil/Bandeira_de_Santa_Cata
 import flagSaoPaulo from '../assets/img/flags_brazil/Bandeira_do_estado_de_São_Paulo.svg.png';
 import flagSergipe from '../assets/img/flags_brazil/Bandeira_de_Sergipe.svg.png';
 import flagTocantins from '../assets/img/flags_brazil/Bandeira_do_Tocantins.svg.png';
+import axios from 'axios';
+
+const ENDPOINT = 'http://127.0.0.1:8000/api/clients';
 
 export const ClientService = {
-  getData() {
-    return [
-      {
-        id: 1000,
-        name: 'Micael Muniz',
-        sex: 'm',
-        document: '000.000.000-00',
-        email: 'contato@micaelmuniz.com',
-        tel: '75 99999-9999',
-        location: {
-          city: 'Serrinha',
-          state: {
-            name: 'Bahia',
-            code: 'BA'
-          },
-          cep: '48700-000',
-          street_name: 'Rua Exemplo n 1'
-        },
-        birthday: '2001-04-21',
-        joined: '2022-01-01',
-        last_activity: '2024-01-01',
-        status: 'inactive',
-        spent: 70663,
-        serasa_score: 750
-      },
-      {
-        id: 1001,
-        name: 'Maria Silva',
-        sex: 'f',
-        document: '111.111.111-11',
-        email: 'maria.silva@example.com',
-        tel: '11 98888-8888',
-        location: {
-          city: 'São Paulo',
-          state: {
-            name: 'São Paulo',
-            code: 'SP'
-          },
-          cep: '01000-000',
-          street_name: 'Avenida Paulista, 123'
-        },
-        birthday: '1990-05-15',
-        joined: '2021-03-15',
-        last_activity: '2024-01-01',
-        status: 'active',
-        spent: 45320,
-        serasa_score: 680
-      },
-      {
-        id: 1002,
-        name: 'João Pereira',
-        sex: 'm',
-        document: '222.222.222-22',
-        email: 'joao.pereira@example.com',
-        tel: '21 97777-7777',
-        location: {
-          city: 'Rio de Janeiro',
-          state: {
-            name: 'Rio de Janeiro',
-            code: 'RJ'
-          },
-          cep: '20000-000',
-          street_name: 'Rua das Flores, 45'
-        },
-        birthday: '1985-10-30',
-        joined: '2020-08-20',
-        last_activity: '2024-01-01',
-        status: 'active',
-        spent: 12350,
-        serasa_score: 520
-      }
-    ]
+  async getData() {
+    try {
+      const response = await axios.get(ENDPOINT);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching clients data:', error);
+      throw error;
+    }
+  },
+
+  async delete(id){
+    try {
+      const response = await axios.delete(`${ENDPOINT}/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting client:', error);
+      throw error;
+    }
   },
 
   getCustomersSmall() {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import BasePage from './BasePage';
 import {FilterMatchMode, FilterOperator} from 'primereact/api';
 import {DataTable} from 'primereact/datatable';
@@ -18,73 +18,81 @@ import Form from "react-bootstrap/Form";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import maleUserIllustration from '../../assets/img/male-client-illustration.png';
 import femaleUserIllustration from '../../assets/img/female-client-illustration.png';
-import {Link} from "react-router-dom";
 
 
 export default function ClientsDashboard() {
 
   // TODO: BUG NO FILTRO DE LOCALIZATION, RESOLVER (MESMO BUG QUE OCORREU NO ORDER)
-  const [customers, setCustomers] = useState(null);
+  const [clients, setClients] = useState(null);
   const [filters, setFilters] = useState(null);
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [sortField, setSortField] = useState(null);
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
   const [sortOrder, setSortOrder] = useState(null);
-  const handleOpenModal = () => setIsOpenModal(true);
-  const handleCloseModal = () => {
+  const handleOpenUpdateModal = () => setIsOpenUpdateModal(true);
+  const handleCloseUpdateModal = () => {
     resetEditingNow();
-    setIsOpenModal(false);
+    setIsOpenUpdateModal(false);
   };
-  const [editingNow, setEditingNow] = useState({
+
+  const clientObject = {
     id: 0,
     name: '',
     sex: '',
     document: '',
     email: '',
     tel: '',
-    location: {
-      city: '',
-      state: {
-        name: '',
-        code: ''
-      },
-      cep: '',
-      street_name: ''
-    },
+    city: '',
+    state_name: '',
+    state_code: '',
+    cep: '',
+    street_name: '',
     birthday: '',
-    joined: '',
-    last_activity: '',
     status: '',
+    score: 0,
+    created_at: '',
+    updated_at: '',
     spent: 0,
-    serasa_score: 0
-  });
+    surname: ''
+  }
+
+  const handleOpenDeleteModal = () => setIsOpenDeleteModal(true);
+  const handleCloseDeleteModal = () => setIsOpenDeleteModal(false);
+  const [editingNow, setEditingNow] = useState(clientObject);
+
   const [statuses] = useState(['active', 'pending', 'inactive']);
 
   const resetEditingNow = () => {
-    setEditingNow({
-      id: 0,
-      name: '',
-      sex: '',
-      document: '',
-      email: '',
-      tel: '',
-      location: {
-        city: '',
-        state: {
-          name: '',
-          code: ''
-        },
-        cep: '',
-        street_name: ''
-      },
-      birthday: '',
-      joined: '',
-      last_activity: '',
-      status: '',
-      spent: 0,
-      serasa_score: 0
-    })
+    setEditingNow(clientObject)
+  }
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+
+    let updatedEditingNow = { ...editingNow };
+
+    if (name.includes('.')) {
+      const keys = name.split('.');
+      let temp = updatedEditingNow;
+      for (let i = 0; i < keys.length - 1; i++) {
+        temp = temp[keys[i]];
+      }
+      temp[keys[keys.length - 1]] = value;
+    } else {
+      updatedEditingNow[name] = value;
+    }
+
+    setEditingNow(updatedEditingNow);
+  };
+
+  const refreshData = () => {
+    setLoading(true);
+    ClientService.getData().then((data) => {
+      setClients(formatClientData(data));
+      setLoading(false);
+    });
   }
 
   const getSeverity = (status) => {
@@ -101,10 +109,8 @@ export default function ClientsDashboard() {
   };
 
   useEffect(() => {
-    ClientService.getCustomersMedium().then((data) => {
-      setCustomers(getCustomers(data));
-      setLoading(false);
-    });
+    setLoading(true);
+    refreshData();
     initFilters();
   }, []);
 
@@ -122,15 +128,12 @@ export default function ClientsDashboard() {
     setEditingNow({...editingNow, document: value});
   };
 
-  const getCustomers = (data) => {
-    const processedData = [...(data || [])].map((d) => {
-      d.joined = new Date(d.joined);
+  const formatClientData = (data) => {
+    return [...(data || [])].map((d) => {
+      d.created_at = new Date(d.created_at);
+      d.updated_at = new Date(d.updated_at);
       return d;
     });
-
-    console.log(processedData); // Adicione esta linha
-
-    return processedData;
   };
 
   const formatDate = (value) => {
@@ -149,11 +152,11 @@ export default function ClientsDashboard() {
     setFilters({
       global: {value: null, matchMode: FilterMatchMode.CONTAINS},
       id: {value: null, matchMode: FilterMatchMode.CONTAINS},
-      joined: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.DATE_IS}]},
+      created_at: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.DATE_IS}]},
       spent: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
       status: {operator: FilterOperator.OR, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
-      serasa_score: {value: null, matchMode: FilterMatchMode.BETWEEN},
-      'location.state.name': {value: null, matchMode: FilterMatchMode.IN} // Alterado para 'location.state.name'
+      score: {value: null, matchMode: FilterMatchMode.BETWEEN},
+      state_name: {value: null, matchMode: FilterMatchMode.IN} // Alterado para 'location.state.name'
     });
     setGlobalFilterValue('');
     setSortField('id');
@@ -175,33 +178,24 @@ export default function ClientsDashboard() {
   };
 
   const locationBodyTemplate = (rowData) => {
-    let flag = ClientService.getBrazilianStateFlag(rowData.location.state.code);
+    const {state_name, state_code} = rowData;
+    let flag = ClientService.getBrazilianStateFlag(state_code);
+
     return (
         <div className="flex align-items-center gap-2">
           <img
-              alt={rowData.location.state.name}
-              title={rowData.location.state.name}
+              alt={state_name}
+              title={state_name}
               src={flag}
               style={{width: '24px'}}
           />
-          <span className="ms-2">{rowData.location.state.name}</span>
+          <span className="ms-2">{state_name}</span>
         </div>
     );
   };
 
-
-  const locationItemTemplate = (option) => {
-    return (
-        <div className="flex align-items-center gap-2">
-          <img alt={option.name} src={ClientService.getBrazilianStateFlag(option.code)} width="24"/>
-          <span>{option.name}</span>
-        </div>
-    );
-  }
-
-
   const clientBodyTemplate = (rowData) => {
-    const {name, sex} = rowData;
+    const {name, surname, sex} = rowData;
 
     return (
         <div className="flex align-items-center gap-2">
@@ -210,7 +204,7 @@ export default function ClientsDashboard() {
               width="32"
               src={sex === 'm' ? maleUserIllustration : femaleUserIllustration}
           />
-          <span className="ms-2">{name}</span>
+          <span className="ms-2">{name} {surname}</span>
         </div>
     );
   };
@@ -220,7 +214,7 @@ export default function ClientsDashboard() {
   }
 
   const joinedBodyTemplate = (rowData) => {
-    let date = new Date(rowData.joined);
+    let date = new Date(rowData.created_at);
     return formatDate(date);
   };
 
@@ -229,7 +223,8 @@ export default function ClientsDashboard() {
   };
 
   const totalSpentBodyTemplate = (rowData) => {
-    return formatCurrency(rowData.spent);
+    // TODO: INSERIR O VALOR REAL
+    return formatCurrency(0);
   };
 
   const totalSpentFilterTemplate = (options) => {
@@ -249,7 +244,7 @@ export default function ClientsDashboard() {
   };
 
   const serasaScoreBodyTemplate = (rowData) => {
-    return <ProgressBar value={rowData.serasa_score / 10} showValue={false} style={{height: '6px'}}></ProgressBar>;
+    return <ProgressBar value={rowData.score / 10} showValue={false} style={{height: '6px'}}></ProgressBar>;
   };
 
   const serasaScoreFilterTemplate = (options) => {
@@ -285,7 +280,7 @@ export default function ClientsDashboard() {
             </Button>
           </InputGroup>
           <DataTable
-              value={customers}
+              value={clients}
               paginator
               showGridlines
               rows={10}
@@ -319,7 +314,7 @@ export default function ClientsDashboard() {
             />
             <Column
                 header="Localização"
-                filterField="location.state.name" // Alterado para 'location.state.name'
+                filterField="state_name" // Alterado para 'location.state.name'
                 style={{minWidth: '12rem'}}
                 body={locationBodyTemplate}
                 filter
@@ -335,7 +330,7 @@ export default function ClientsDashboard() {
             />
             <Column
                 header="Ingresso"
-                filterField="joined"
+                filterField="created_at"
                 dataType="date"
                 style={{minWidth: '9rem'}}
                 body={joinedBodyTemplate}
@@ -361,7 +356,7 @@ export default function ClientsDashboard() {
                 filterElement={statusFilterTemplate}
             />
             <Column
-                field="serasa_score"
+                field="score"
                 header="Score"
                 showFilterMatchModes={false}
                 style={{minWidth: '10rem'}}
@@ -379,7 +374,7 @@ export default function ClientsDashboard() {
                           className="p-button-rounded rounded-5 btn-color-1-light p-mr-2"
                           onClick={() => {
                             setEditingNow(rowData);
-                            handleOpenModal();
+                            handleOpenUpdateModal();
                           }}
                       />
                     </div>
@@ -394,8 +389,8 @@ export default function ClientsDashboard() {
                           icon="pi pi-trash"
                           className="p-button-rounded rounded-5 btn-color-4 p-mr-2"
                           onClick={() => {
-                            // modal de confirmacao
-                            // service de deletar
+                            setEditingNow(rowData);
+                            handleOpenDeleteModal();
                           }}
                       />
                     </div>
@@ -405,10 +400,8 @@ export default function ClientsDashboard() {
         </div>
 
         <Modal
-            open={isOpenModal}
-            onClose={handleCloseModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+            open={isOpenUpdateModal}
+            onClose={handleCloseUpdateModal}
         >
           <div className="base-modal">
             <Form className="w-100 mx-auto">
@@ -422,13 +415,23 @@ export default function ClientsDashboard() {
                 <Col>
                   <Form.Group className="mb-3" controlId="formBasicText">
                     <Form.Label style={{color: "#c5c5c5"}}>Nome</Form.Label>
-                    <Form.Control name="name" type="text" value={editingNow.name.split(" ")[0]}/>
+                    <Form.Control
+                        name="name"
+                        type="text"
+                        value={editingNow.name}
+                        onChange={handleOnChange}
+                    />
                   </Form.Group>
                 </Col>
                 <Col>
                   <Form.Group className="mb-3" controlId="formBasicText">
                     <Form.Label style={{color: "#c5c5c5"}}>Sobrenome</Form.Label>
-                    <Form.Control name="surname" type="text" value={editingNow.name.split(" ")[1]}/>
+                    <Form.Control
+                        name="surname"
+                        type="text"
+                        value={editingNow.surname}
+                        onChange={handleOnChange}
+                    />
                   </Form.Group>
                 </Col>
               </Row>
@@ -437,13 +440,23 @@ export default function ClientsDashboard() {
                 <Col xs={8}>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label style={{color: "#c5c5c5"}}>Endereço de email</Form.Label>
-                    <Form.Control name="email" type="email" value={editingNow.email}/>
+                    <Form.Control
+                        name="email"
+                        type="email"
+                        value={editingNow.email}
+                        onChange={handleOnChange}
+                    />
                   </Form.Group>
                 </Col>
                 <Col xs={4}>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label style={{color: "#c5c5c5"}}>Telefone</Form.Label>
-                    <Form.Control name="tel" type="tel" value={editingNow.tel}/>
+                    <Form.Control
+                        name="tel"
+                        type="tel"
+                        value={editingNow.tel}
+                        onChange={handleOnChange}
+                    />
                   </Form.Group>
                 </Col>
               </Row>
@@ -456,8 +469,9 @@ export default function ClientsDashboard() {
                         name="document"
                         type="text"
                         value={editingNow.document}
-                        onChange={handleDocumentInputChange}
-                        maxLength={18}/>
+                        onChange={handleOnChange}
+                        maxLength={18}
+                    />
                   </Form.Group>
                 </Col>
                 <Col xs={4}>
@@ -467,13 +481,14 @@ export default function ClientsDashboard() {
                         name="birthday"
                         type="date"
                         value={editingNow.birthday}
+                        onChange={handleOnChange}
                     />
                   </Form.Group>
                 </Col>
                 <Col xs={3}>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label style={{color: "#c5c5c5"}}>Sexo</Form.Label>
-                    <Form.Select name="sex">
+                    <Form.Select name="sex" value={editingNow.sex} onChange={handleOnChange}>
                       <option value="m" selected={editingNow.sex === 'm'}>Masculino</option>
                       <option value="f" selected={editingNow.sex === 'f'}>Feminino</option>
                     </Form.Select>
@@ -488,14 +503,15 @@ export default function ClientsDashboard() {
                     <Form.Control
                         name="city"
                         type="text"
-                        value={editingNow.location.city}
+                        value={editingNow.city}
+                        onChange={handleOnChange}
                     />
                   </Form.Group>
                 </Col>
                 <Col xs={4}>
                   <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label style={{color: "#c5c5c5"}}>Estado</Form.Label>
-                    <Form.Select name="state">
+                    <Form.Select name="state" value={editingNow.state_name} onChange={handleOnChange}>
                       {ClientService.getBrazilianStates().map((state) => (
                           <option value={state.code}>
                             {state.name}
@@ -510,7 +526,8 @@ export default function ClientsDashboard() {
                     <Form.Control
                         name="cep"
                         type="text"
-                        value={editingNow.location.cep}
+                        value={editingNow.cep}
+                        onChange={handleOnChange}
                     />
                   </Form.Group>
                 </Col>
@@ -522,6 +539,32 @@ export default function ClientsDashboard() {
             </Form>
           </div>
         </Modal>
+
+        <Modal
+            open={isOpenDeleteModal}
+            onClose={handleCloseDeleteModal}
+        >
+          <div className="base-modal">
+            <p className="text-white poppins fw-bold fs-3 w-100 text-center">
+              Deletando o cliente {editingNow.name}
+            </p>
+
+            <div className="d-flex justify-content-center gap-4">
+              <Button className="btn-color-1 rounded-3" onClick={handleCloseDeleteModal}>
+                Cancelar
+              </Button>
+              <Button className="btn-color-4 rounded-3" onClick={() => {
+                ClientService.delete(editingNow.id).then(() => {
+                    handleCloseDeleteModal();
+                    refreshData();
+                  });
+                }}>
+                Deletar
+              </Button>
+            </div>
+          </div>
+        </Modal>
+
       </BasePage>
   );
 }
