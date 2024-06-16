@@ -178,7 +178,7 @@ export default function ClientsDashboard() {
   };
 
   const locationBodyTemplate = (rowData) => {
-    const {state_name, state_code} = rowData;
+    const {state_name, state_code, city} = rowData;
     let flag = ClientService.getBrazilianStateFlag(state_code);
 
     return (
@@ -189,7 +189,7 @@ export default function ClientsDashboard() {
               src={flag}
               style={{width: '24px'}}
           />
-          <span className="ms-2">{state_name}</span>
+          <span className="ms-2">{city}</span>
         </div>
     );
   };

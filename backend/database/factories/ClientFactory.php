@@ -5,21 +5,45 @@ namespace Database\Factories;
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Client>
- */
 class ClientFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-
     protected $model = Client::class;
 
     public function definition()
     {
+        $stateAbbreviations = [
+            'AC' => 'Acre',
+            'AL' => 'Alagoas',
+            'AP' => 'Amapá',
+            'AM' => 'Amazonas',
+            'BA' => 'Bahia',
+            'CE' => 'Ceará',
+            'DF' => 'Distrito Federal',
+            'ES' => 'Espírito Santo',
+            'GO' => 'Goiás',
+            'MA' => 'Maranhão',
+            'MT' => 'Mato Grosso',
+            'MS' => 'Mato Grosso do Sul',
+            'MG' => 'Minas Gerais',
+            'PA' => 'Pará',
+            'PB' => 'Paraíba',
+            'PR' => 'Paraná',
+            'PE' => 'Pernambuco',
+            'PI' => 'Piauí',
+            'RJ' => 'Rio de Janeiro',
+            'RN' => 'Rio Grande do Norte',
+            'RS' => 'Rio Grande do Sul',
+            'RO' => 'Rondônia',
+            'RR' => 'Roraima',
+            'SC' => 'Santa Catarina',
+            'SP' => 'São Paulo',
+            'SE' => 'Sergipe',
+            'TO' => 'Tocantins',
+        ];
+
+        $stateCode = $this->faker->randomElement(array_keys($stateAbbreviations));
+        $stateName = $stateAbbreviations[$stateCode];
+
         return [
             'name' => $this->faker->firstName,
             'surname' => $this->faker->lastName,
@@ -31,8 +55,8 @@ class ClientFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'tel' => $this->faker->phoneNumber,
             'city' => $this->faker->city,
-            'state_name' => $this->faker->state,
-            'state_code' => $this->faker->stateAbbr,
+            'state_name' => $stateName,
+            'state_code' => $stateCode,
             'cep' => $this->faker->postcode,
             'street_name' => $this->faker->streetAddress,
             'birthday' => $this->faker->date('Y-m-d', now()),
