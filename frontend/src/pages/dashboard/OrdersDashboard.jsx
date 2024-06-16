@@ -26,7 +26,7 @@ export default function OrdersDashboard() {
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [statuses] = useState(['Em aberto', 'Pago', 'Cancelado']);
-  const [clients, setclients] = useState([
+  const [clients, setClients] = useState([
     {name: 'Amy Elsner', sex: 'f'},
     {name: 'Asiya Javayant', sex: 'f'},
     {name: 'Ioni Bowcher', sex: 'm'}
@@ -49,6 +49,10 @@ export default function OrdersDashboard() {
     OrderService.getCustomersMedium().then((data) => {
       setOrders(getCustomers(data));
       setLoading(false);
+    });
+    OrderService.getAllClientsNameAndSex().then((data) => {
+      console.log(data);
+      setClients(data);
     });
     initFilters();
   }, []);
@@ -120,7 +124,7 @@ export default function OrdersDashboard() {
   const clientsItemTemplate = (option) => {
     return (
         <div className="flex align-items-center gap-2">
-          <img alt={option.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${option.image}`} width="32" />
+          <img alt={option.name} src={option.sex === 'm' ? maleUserIllustration : femaleUserIllustration}  width="32" />
           <span className="ms-2">{option.name}</span>
         </div>
     );

@@ -40,7 +40,8 @@ export const OrderService = {
   getAllClientsNameAndSex() {
     return Promise.resolve(this.getData().map(d => {
       return {
-        name: d.client,
+        name: d.client.name,
+        sex: d.client.sex
       };
     }));
   },
