@@ -4,6 +4,7 @@ import {Col, Row} from "react-bootstrap";
 import {Button} from "primereact/button";
 import {Modal} from "@mui/material";
 
+
 const BaseForm = ({productObj, setImageFile, setTargetProduct, title}) => {
   const handleChange = (e) => {
     const {name, value} = e.target;
@@ -131,34 +132,37 @@ const BaseForm = ({productObj, setImageFile, setTargetProduct, title}) => {
   );
 }
 
-// export const UpdateProductModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
-//   return (
-//       <Modal
-//           open={isOpen}
-//           onClose={handleClose}
-//       >
-//         <div className="base-modal">
-//           <BaseForm
-//               service={service}
-//               setTargetClient={setTargetClient}
-//               title={`Atualizando dados do cliente ${clientObj.name} ${clientObj.surname}`}
-//               clientObj={clientObj}
-//           />
-//           <hr/>
-//           <Button
-//               className="btn-color-1 rounded-3"
-//               onClick={() => {
-//                 service.update(clientObj).then(() => {
-//                   handleClose();
-//                 });
-//               }}
-//           >
-//             Atualizar
-//           </Button>
-//         </div>
-//       </Modal>
-//   );
-// }
+export const UpdateProductModal = ({service, isOpen, setTargetProduct, handleClose, productObj}) => {
+  const [imageFile, setImageFile] = useState(null);
+  return (
+      <Modal
+          open={isOpen}
+          onClose={handleClose}
+      >
+        <div className="base-modal">
+          <BaseForm
+              service={service}
+              setTargetProduct={setTargetProduct}
+              title={`Atualizando dados do produto`}
+              productObj={productObj}
+              setImageFile={setImageFile}
+          />
+          <hr/>
+          <Button
+              className="btn-color-1 rounded-3"
+              onClick={() => {
+                service.update(productObj, imageFile).then(() => {
+                  handleClose();
+                  setImageFile(null);
+                });
+              }}
+          >
+            Atualizar
+          </Button>
+        </div>
+      </Modal>
+  );
+}
 
 // export const DeleteClientModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
 //   return (
@@ -188,7 +192,7 @@ const BaseForm = ({productObj, setImageFile, setTargetProduct, title}) => {
 // }
 //
 export const CreateProductModal = ({service, isOpen, productObj, setTargetProduct, handleClose}) => {
-  const [imageFile, setImageFile] = useState();
+  const [imageFile, setImageFile] = useState(null);
   return (
       <Modal
           open={isOpen}
@@ -207,6 +211,7 @@ export const CreateProductModal = ({service, isOpen, productObj, setTargetProduc
               onClick={() => {
                 service.create(productObj, imageFile).then(() => {
                   handleClose();
+                  setImageFile(null);
                 });
               }}
           >

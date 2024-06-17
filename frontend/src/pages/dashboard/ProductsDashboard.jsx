@@ -10,7 +10,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ProductCard from '../../components/ProductCard';
 import {ProductService} from '../../service/ProductService';
 import ProductsSkeleton from "../../components/ProductsSkeleton";
-import {CreateProductModal} from "../../components/modals/ProductsModals";
+import {CreateProductModal, UpdateProductModal} from "../../components/modals/ProductsModals";
 
 
 export default function ProductsDashboard() {
@@ -43,7 +43,7 @@ export default function ProductsDashboard() {
   }, []);
 
   return (
-      <BasePage fabShow fabCallback={()=>{
+      <BasePage fabShow fabCallback={() => {
         setTargetProduct(ProductService.getBaseObject());
         setIsOpenCreateModal(true);
       }}>
@@ -69,6 +69,10 @@ export default function ProductsDashboard() {
                             price={product.price}
                             available={product.available}
                             image={`${cdnProductUrl}/${product.image}`}
+                            onClick={() => {
+                              setTargetProduct(product);
+                              setIsOpenUpdateModal(true);
+                            }}
                         />
                     ))
                 ) : (
@@ -82,6 +86,16 @@ export default function ProductsDashboard() {
               productObj={targetProduct}
               handleClose={() => {
                 setIsOpenCreateModal(false);
+                fetchProductsData();
+              }}
+          />
+          <UpdateProductModal
+              service={ProductService}
+              isOpen={isOpenUpdateModal}
+              setTargetProduct={setTargetProduct}
+              productObj={targetProduct}
+              handleClose={() => {
+                setIsOpenUpdateModal(false);
                 fetchProductsData();
               }}
           />

@@ -24,16 +24,22 @@ class ProductController extends Controller {
     }
 
     public function store(Request $request): JsonResponse{
-
-        if (!$request->hasFile('image') && !$request->file('image')->isValid()){
-            return response()->json(['error' => 'Imagem não encontrada'], 400);
-        }
-
         $created = $this->productService->createProduct($request);
         if (!$created){
             return response()->json(['error' => 'Erro ao criar produto'], 500);
         }
 
         return response()->json(['message' => 'Produto criado com sucesso'], 201);
+    }
+
+    public function update(Request $request, int $id): JsonResponse{
+        return response()->json($request->json(), 200);
+
+        $updated = $this->productService->updateProduct($request, $id);
+        if (!$updated){
+            return response()->json(['error' => 'Erro ao atualizar produto'], 500);
+        }
+
+        return response()->json(['message' => 'Produto atualizado com sucesso'], 200);
     }
 }

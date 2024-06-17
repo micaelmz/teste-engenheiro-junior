@@ -140,6 +140,10 @@
     border-radius: 10px;
 }
 
+.card-pointer{
+    cursor: pointer;
+}
+
 body{
     margin: 0;
     padding: 0;

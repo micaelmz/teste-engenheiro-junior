@@ -37,7 +37,9 @@ export const ProductService = {
         formData.append(key, productObj[key]);
       });
 
-      formData.append('image', imageFile);
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
 
       const response = await axios.post(`${ENDPOINT}/`, formData, {
         headers: {
@@ -48,6 +50,31 @@ export const ProductService = {
       return response.data;
     } catch (error) {
       console.error('Error creating product:', error);
+      throw error;
+    }
+  },
+
+  async update(productObj, imageFile) {
+    try {
+      const formData = new FormData();
+
+      Object.keys(productObj).forEach(key => {
+        formData.append(key, productObj[key]);
+      });
+
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
+
+      const response = await axios.put(`${ENDPOINT}/${productObj.id}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(productObj);
+      return response.request;
+    } catch (error) {
+      console.error('Error updating product:', error);
       throw error;
     }
   },

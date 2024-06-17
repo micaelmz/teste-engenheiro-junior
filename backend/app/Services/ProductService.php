@@ -24,12 +24,18 @@ class ProductService {
         $product = new Product;
 
         // Armaneza a imagem do produto no servidor e salva o caminho e seu nome unico no banco de dados
-        $requestImage = $request->image;
-        $imageExtension = $requestImage->extension();
-        $imageName = md5($requestImage->getClientOriginalName() . strtotime('now')) . '.' . $imageExtension;
-        $requestImage->move(public_path('img/products'), $imageName);
+        if ($request->hasFile('image') and $request->file('image')->isValid()){
+            $requestImage = $request->image;
+            $imageExtension = $requestImage->extension();
+            $imageName = md5($requestImage->getClientOriginalName() . strtotime('now')) . '.' . $imageExtension;
 
-        $product->image = $imageName;
+            $requestImage->move(public_path('img/products'), $imageName);
+
+            $product->image = $imageName;
+        }else{
+            $product->image = 'no_image.jpg';
+        }
+
         $product->name = $request->name;
         $product->description = $request->description;
         $product->price = $request->price;

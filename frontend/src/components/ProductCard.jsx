@@ -5,14 +5,14 @@ import Badge from "react-bootstrap/Badge";
 import {Typography} from "@mui/material";
 
 
-export default function ProductCard({image, available, name, price}) {
+export default function ProductCard({image, available, name, onClick, price}) {
 
   const formatCurrency = (value) => {
     return value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
   };
 
   return (
-      <Card className="rounded-4 me-2" style={{width: '17rem', padding: 0}}>
+      <Card onClick={onClick} className="rounded-4 me-2 card-pointer" style={{width: '17rem', padding: 0}}>
         <Card.Img className="rounded-4 rounded-bottom product-img" variant="top"
                   src={image}/>
         <Card.Body className="p-4">
