@@ -10,7 +10,6 @@ import ClientDataTable from "../../components/datatables/ClientDataTable";
 import {UpdateClientModal, DeleteClientModal, CreateClientModal} from "../../components/modals/ClientModals";
 import {ClientService} from "../../service/ClientService";
 
-// TODO: BUG NO FILTRO DE LOCALIZATION, RESOLVER (MESMO BUG QUE OCORREU NO ORDER)
 export default function ClientsDashboard() {
   const clientObject = {
     id: 0,

@@ -187,7 +187,7 @@ export const DeleteClientModal = ({service, isOpen, setTargetProduct, handleClos
       >
         <div className="base-modal">
           <p className="text-white poppins fw-bold fs-3 w-100 text-center">
-            Deletando o produto "{productObj.name}" ({productObj.sku})
+            Realmente deseja deletar o produto?
           </p>
 
           <div className="d-flex justify-content-center gap-4">
