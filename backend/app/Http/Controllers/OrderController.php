@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\OrderService;
 use App\Services\ProductService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
-class ProductController extends Controller {
+class OrderController extends Controller{
 
-    protected $productService;
+    protected $orderService;
 
-    public function __construct(ProductService $productService) {
-        $this->productService = $productService;
+    public function __construct(OrderService $orderService) {
+        $this->orderService = $orderService;
     }
 
     /**
@@ -20,11 +21,11 @@ class ProductController extends Controller {
      * @return JsonResponse
      */
     public function index(): JsonResponse {
-        return response()->json($this->productService->getAllProducts());
+        return response()->json($this->orderService->getAllOrdersFormatted());
     }
 
     public function show(Request $request): JsonResponse{
-        $product = $this->productService->getProductById($request->id);
+        $product = $this->orderService->getOrderById($request->id);
         if ($product === null){
             return response()->json(['error' => 'Produto não encontrado'], 404);
         }
@@ -33,7 +34,7 @@ class ProductController extends Controller {
     }
 
     public function store(Request $request): JsonResponse{
-        $created = $this->productService->createProduct($request);
+        $created = $this->orderService->createOrder($request);
         if (!$created){
             return response()->json(['error' => 'Erro ao criar produto'], 500);
         }
@@ -42,7 +43,7 @@ class ProductController extends Controller {
     }
 
     public function update(Request $request, int $id): JsonResponse{
-        $updated = $this->productService->updateProduct($request, $id);
+        $updated = $this->orderService->updateOrder($request, $id);
         if (!$updated){
             return response()->json(['error' => 'Erro ao atualizar produto'], 500);
         }
@@ -51,7 +52,7 @@ class ProductController extends Controller {
     }
 
     public function destroy(int $id): JsonResponse{
-        $deleted = $this->productService->deleteProduct($id);
+        $deleted = $this->orderService->deleteOrder($id);
         if (!$deleted){
             return response()->json(['error' => 'Erro ao deletar produto'], 500);
         }

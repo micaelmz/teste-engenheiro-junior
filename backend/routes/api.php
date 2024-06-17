@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +29,13 @@ Route::put('/clients/{id}', [ClientController::class, 'update']);
 Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
 
 Route::get('/products', [ProductController::class, 'index']);
-//Route::get('/products/{id}', [ClientController::class, 'show']);
+Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+
+Route::get('/orders', [OrderController::class, 'index']);
+//Route::get('/orders/{id}', [ProductController::class, 'show']);
+//Route::post('/orders', [ProductController::class, 'store']);
+//Route::put('/orders/{id}', [ProductController::class, 'update']);
+//Route::delete('/orders/{id}', [ProductController::class, 'destroy']);

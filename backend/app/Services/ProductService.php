@@ -20,6 +20,10 @@ class ProductService {
         return Product::all();
     }
 
+    public function getProductById(int $id): Product{
+        return Product::findOrFail($id);
+    }
+
     public function createProduct(Request $request): bool{
         $product = new Product;
 
