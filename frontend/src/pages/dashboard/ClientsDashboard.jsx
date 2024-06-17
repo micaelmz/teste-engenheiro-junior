@@ -32,9 +32,14 @@ export default function ClientsDashboard() {
     updated_at: '',
     spent: 0,
   }
+
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
+
   const [targetClient, setTargetClient] = useState(clientObject); // Target to edit or delete
+
+  const [shouldUpdateTable, setShouldUpdateTable] = useState(false);
+
 
   return (
       <BasePage fabShow>
@@ -55,18 +60,36 @@ export default function ClientsDashboard() {
 
           <ClientDataTable
               service={ClientService}
+              shouldUpdateTable={shouldUpdateTable}
+              setShouldUpdateTable={setShouldUpdateTable}
               onUpdate={(rowData) => {
                 setTargetClient(rowData);
                 setIsOpenUpdateModal(true);
               }}
-              onDelete={() => {setIsOpenDeleteModal(true)}}
+              onDelete={(rowData) => {
+                setTargetClient(rowData);
+                setIsOpenDeleteModal(true);
+              }}
           />
           <UpdateClientModal
+              service={ClientService}
               clientObj={targetClient}
               setTargetClient={setTargetClient}
-              service={ClientService}
               isOpen={isOpenUpdateModal}
-              handleClose={() => setIsOpenUpdateModal(false)}
+              handleClose={() => {
+                setIsOpenUpdateModal(false);
+                setShouldUpdateTable(true);
+              }}
+          />
+          <DeleteClientModal
+              service={ClientService}
+              clientObj={targetClient}
+              setTargetClient={setTargetClient}
+              isOpen={isOpenDeleteModal}
+              handleClose={() => {
+                setIsOpenDeleteModal(false);
+                setShouldUpdateTable(true);
+              }}
           />
         </div>
       </BasePage>

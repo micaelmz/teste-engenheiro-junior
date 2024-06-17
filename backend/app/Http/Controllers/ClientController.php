@@ -21,9 +21,9 @@ class ClientController extends Controller
      * @return JsonResponse
      */
     public function index() : JsonResponse{
-        $formattedClients = $this->clientService->getAllClients();
+        $clients = $this->clientService->getAllClients();
 
-        return response()->json($formattedClients);
+        return response()->json($clients);
     }
 
     /**
@@ -33,9 +33,10 @@ class ClientController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(int $id) : JsonResponse{
-        $formattedClient = $this->clientService->getClientFormatted($id);
+        // todo: validation
+        $client = $this->clientService->getClient($id);
 
-        return response()->json($formattedClient);
+        return response()->json($client);
     }
 
     /**
@@ -63,6 +64,7 @@ class ClientController extends Controller
      */
     public function update(Request $request, int $id) : JsonResponse{
         $updated = $this->clientService->updateClient($request->all(), $id);
+
         if ($updated) {
             return response()->json(['message' => 'Cliente atualizado com sucesso']);
         }

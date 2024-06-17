@@ -7,9 +7,9 @@ import {Modal} from "@mui/material";
 
 export const UpdateClientModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
 
-    let updatedTargetClient = { ...clientObj };
+    let updatedTargetClient = {...clientObj};
 
     if (name.includes('.')) {
       const keys = name.split('.');
@@ -159,44 +159,50 @@ export const UpdateClientModal = ({service, isOpen, setTargetClient, handleClose
                 </Form.Group>
               </Col>
             </Row>
-            <hr/>
-            <Button type="submit" className="btn-color-1 rounded-3">
-              Atualizar
-            </Button>
           </Form>
+          <hr/>
+          <Button
+              className="btn-color-1 rounded-3"
+              onClick={() => {
+                service.update(clientObj).then(() => {
+                  handleClose();
+                });
+              }}
+          >
+            Atualizar
+          </Button>
         </div>
       </Modal>
   );
 }
 
-// export const DeleteClientModal = (clientObj, service) => {
-//   return (
-//       <Modal
-//       open={isOpenDeleteModal}
-//       onClose={handleCloseDeleteModal}
-//   >
-//     <div className="base-modal">
-//       <p className="text-white poppins fw-bold fs-3 w-100 text-center">
-//         Deletando o cliente {editingNow.name}
-//       </p>
-//
-//       <div className="d-flex justify-content-center gap-4">
-//         <Button className="btn-color-1 rounded-3" onClick={handleCloseDeleteModal}>
-//           Cancelar
-//         </Button>
-//         <Button className="btn-color-4 rounded-3" onClick={() => {
-//           ClientService.delete(editingNow.id).then(() => {
-//             handleCloseDeleteModal();
-//             refreshData();
-//           });
-//         }}>
-//           Deletar
-//         </Button>
-//       </div>
-//     </div>
-//   </Modal>);
-// }
-//
+export const DeleteClientModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
+  return (
+      <Modal
+          open={isOpen}
+          onClose={handleClose}
+      >
+        <div className="base-modal">
+          <p className="text-white poppins fw-bold fs-3 w-100 text-center">
+            Deletando o cliente {clientObj.name} {clientObj.surname}
+          </p>
+
+          <div className="d-flex justify-content-center gap-4">
+            <Button className="btn-color-1 rounded-3" onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button className="btn-color-4 rounded-3" onClick={() => {
+              service.delete(clientObj.id).then(() => {
+                handleClose();
+              });
+            }}>
+              Deletar
+            </Button>
+          </div>
+        </div>
+      </Modal>);
+}
+
 // export const CreateClientModal = (clientObj, service) => {
 //   return null;
 // }

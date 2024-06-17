@@ -40,6 +40,17 @@ export const ClientService = {
     }
   },
 
+  async update(clientObj){
+    try {
+      const {id, ...body } = clientObj;
+      const response = await axios.put(`${ENDPOINT}/${id}`, body);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating client:', error);
+      throw error;
+    }
+  },
+
   async delete(id){
     try {
       const response = await axios.delete(`${ENDPOINT}/${id}`);

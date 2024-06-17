@@ -15,7 +15,7 @@ import {FilterMatchMode, FilterOperator} from "primereact/api";
 import maleUserIllustration from '../../assets/img/male-client-illustration.png';
 import femaleUserIllustration from '../../assets/img/female-client-illustration.png';
 
-export default function ClientDataTable({service, onUpdate, onDelete}) {
+export default function ClientDataTable({service, onUpdate, onDelete, shouldUpdateTable, setShouldUpdateTable}) {
   /* STATES */
   const [clients, setClients] = useState(null);
   const [filters, setFilters] = useState(null);
@@ -189,6 +189,7 @@ export default function ClientDataTable({service, onUpdate, onDelete}) {
     service.getData().then((data) => {
       setClients(formatClientData(data));
       setLoading(false);
+      setShouldUpdateTable(false);
     });
   }
 
@@ -197,7 +198,7 @@ export default function ClientDataTable({service, onUpdate, onDelete}) {
     setLoading(true);
     fetchTableData();
     initFilters();
-  }, []);
+  }, [shouldUpdateTable]);
 
   return (
       <DataTable
@@ -309,7 +310,7 @@ export default function ClientDataTable({service, onUpdate, onDelete}) {
                       icon="pi pi-trash"
                       className="p-button-rounded rounded-5 btn-color-4 p-mr-2"
                       onClick={() => {
-                        onDelete();
+                        onDelete(rowData);
                       }}
                   />
                 </div>
