@@ -5,7 +5,7 @@ import {Button} from "primereact/button";
 import {Modal} from "@mui/material";
 
 
-const BaseForm = ({productObj, setImageFile, setTargetProduct, title}) => {
+const BaseForm = ({productObj, setImageFile, setTargetProduct, enableImageInput, title}) => {
   const handleChange = (e) => {
     const {name, value} = e.target;
 
@@ -92,14 +92,16 @@ const BaseForm = ({productObj, setImageFile, setTargetProduct, title}) => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formImageUpload">
-          <Form.Label style={{color: "#c5c5c5"}}>Imagem do Produto</Form.Label>
-          <Form.Control
-              name="image"
-              type="file"
-              onChange={(e) => setImageFile(e.target.files[0])}
-          />
-        </Form.Group>
+        {enableImageInput && (
+            <Form.Group className="mb-3" controlId="formImageUpload">
+              <Form.Label style={{color: "#c5c5c5"}}>Imagem do Produto</Form.Label>
+              <Form.Control
+                  name="image"
+                  type="file"
+                  onChange={(e) => setImageFile(e.target.files[0])}
+              />
+            </Form.Group>
+        )}
 
         <Row>
           <Col xs={6}>
@@ -132,7 +134,7 @@ const BaseForm = ({productObj, setImageFile, setTargetProduct, title}) => {
   );
 }
 
-export const UpdateProductModal = ({service, isOpen, setTargetProduct, handleClose, productObj}) => {
+export const UpdateProductModal = ({service, isOpen, setTargetProduct, handleDelete, handleClose, productObj}) => {
   const [imageFile, setImageFile] = useState(null);
   return (
       <Modal
@@ -146,51 +148,64 @@ export const UpdateProductModal = ({service, isOpen, setTargetProduct, handleClo
               title={`Atualizando dados do produto`}
               productObj={productObj}
               setImageFile={setImageFile}
+              enableImageInput={false}
           />
           <hr/>
-          <Button
-              className="btn-color-1 rounded-3"
-              onClick={() => {
-                service.update(productObj, imageFile).then(() => {
-                  handleClose();
-                  setImageFile(null);
-                });
-              }}
-          >
-            Atualizar
-          </Button>
+          <div className="d-flex justify-content-center gap-4">
+            <Button
+                className="btn-color-1 rounded-3"
+                onClick={() => {
+                  service.update(productObj, imageFile).then(() => {
+                    handleClose();
+                    setImageFile(null);
+                  });
+                }}
+            >
+              Atualizar
+            </Button>
+            <Button
+                className="btn-color-4 rounded-3"
+                onClick={() => {
+                  handleDelete(productObj);
+                }}
+            >
+              Deletar
+            </Button>
+          </div>
         </div>
       </Modal>
   );
 }
 
-// export const DeleteClientModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
-//   return (
-//       <Modal
-//           open={isOpen}
-//           onClose={handleClose}
-//       >
-//         <div className="base-modal">
-//           <p className="text-white poppins fw-bold fs-3 w-100 text-center">
-//             Deletando o cliente {clientObj.name} {clientObj.surname}
-//           </p>
-//
-//           <div className="d-flex justify-content-center gap-4">
-//             <Button className="btn-color-1 rounded-3" onClick={handleClose}>
-//               Cancelar
-//             </Button>
-//             <Button className="btn-color-4 rounded-3" onClick={() => {
-//               service.delete(clientObj.id).then(() => {
-//                 handleClose();
-//               });
-//             }}>
-//               Deletar
-//             </Button>
-//           </div>
-//         </div>
-//       </Modal>);
-// }
-//
+export const DeleteClientModal = ({service, isOpen, setTargetProduct, handleClose, productObj}) => {
+  // todo: bug de logica assincrona no Deletando o produto "{productObj.name}" ({productObj.sku}), isso so pode ser instanciado apos os produtos existirem
+
+  return (
+      <Modal
+          open={isOpen}
+          onClose={handleClose}
+      >
+        <div className="base-modal">
+          <p className="text-white poppins fw-bold fs-3 w-100 text-center">
+            Deletando o produto "{productObj.name}" ({productObj.sku})
+          </p>
+
+          <div className="d-flex justify-content-center gap-4">
+            <Button className="btn-color-1 rounded-3" onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button className="btn-color-4 rounded-3" onClick={() => {
+              service.delete(productObj.id).then(() => {
+                handleClose();
+              });
+            }}>
+              Deletar
+            </Button>
+          </div>
+        </div>
+      </Modal>);
+}
+
 export const CreateProductModal = ({service, isOpen, productObj, setTargetProduct, handleClose}) => {
   const [imageFile, setImageFile] = useState(null);
   return (
@@ -204,6 +219,7 @@ export const CreateProductModal = ({service, isOpen, productObj, setTargetProduc
               title="Cadastrando novo produto"
               productObj={productObj}
               setImageFile={setImageFile}
+              enableImageInput={true}
           />
           <hr/>
           <Button

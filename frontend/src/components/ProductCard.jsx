@@ -25,7 +25,7 @@ export default function ProductCard({image, available, name, onClick, price}) {
               {available ? 'Disponivel' : 'Esgotado'}
             </Badge>
             <Typography variant="h6" className="text-black-50 fw-bold">
-              {formatCurrency(price)}
+              {formatCurrency(parseFloat(price))}
             </Typography>
           </div>
         </Card.Body>

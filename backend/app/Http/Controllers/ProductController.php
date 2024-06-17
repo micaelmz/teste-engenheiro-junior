@@ -33,13 +33,20 @@ class ProductController extends Controller {
     }
 
     public function update(Request $request, int $id): JsonResponse{
-        return response()->json($request->json(), 200);
-
         $updated = $this->productService->updateProduct($request, $id);
         if (!$updated){
             return response()->json(['error' => 'Erro ao atualizar produto'], 500);
         }
 
         return response()->json(['message' => 'Produto atualizado com sucesso'], 200);
+    }
+
+    public function destroy(int $id): JsonResponse{
+        $deleted = $this->productService->deleteProduct($id);
+        if (!$deleted){
+            return response()->json(['error' => 'Erro ao deletar produto'], 500);
+        }
+
+        return response()->json(['message' => 'Produto deletado com sucesso'], 200);
     }
 }

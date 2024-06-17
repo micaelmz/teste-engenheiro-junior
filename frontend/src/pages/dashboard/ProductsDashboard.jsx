@@ -10,7 +10,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ProductCard from '../../components/ProductCard';
 import {ProductService} from '../../service/ProductService';
 import ProductsSkeleton from "../../components/ProductsSkeleton";
-import {CreateProductModal, UpdateProductModal} from "../../components/modals/ProductsModals";
+import {CreateProductModal, UpdateProductModal, DeleteClientModal} from "../../components/modals/ProductsModals";
 
 
 export default function ProductsDashboard() {
@@ -94,7 +94,22 @@ export default function ProductsDashboard() {
               isOpen={isOpenUpdateModal}
               setTargetProduct={setTargetProduct}
               productObj={targetProduct}
+              handleDelete={(productObj) => {
+                setTargetProduct(productObj);
+                setIsOpenDeleteModal(true);
+              }}
               handleClose={() => {
+                setIsOpenUpdateModal(false);
+                fetchProductsData();
+              }}
+          />
+          <DeleteClientModal
+              service={ProductService}
+              isOpen={isOpenDeleteModal}
+              setTargetProduct={setTargetProduct}
+              productObj={targetProduct}
+              handleClose={() => {
+                setIsOpenDeleteModal(false);
                 setIsOpenUpdateModal(false);
                 fetchProductsData();
               }}

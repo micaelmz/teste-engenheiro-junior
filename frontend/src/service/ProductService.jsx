@@ -56,29 +56,23 @@ export const ProductService = {
 
   async update(productObj, imageFile) {
     try {
-      const formData = new FormData();
-
-      Object.keys(productObj).forEach(key => {
-        formData.append(key, productObj[key]);
-      });
-
-      if (imageFile) {
-        formData.append('image', imageFile);
-      }
-
-      const response = await axios.put(`${ENDPOINT}/${productObj.id}/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log(productObj);
-      return response.request;
+      const response = await axios.put(`${ENDPOINT}/${productObj.id}`, productObj);
+      return response.data;
     } catch (error) {
-      console.error('Error updating product:', error);
+      console.error('Error creating product:', error);
       throw error;
     }
   },
 
+  async delete(productId){
+    try {
+      const response = await axios.delete(`${ENDPOINT}/${productId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
+  },
 
 
 }
