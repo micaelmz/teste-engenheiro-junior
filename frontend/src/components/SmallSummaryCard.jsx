@@ -1,7 +1,4 @@
 import React from 'react';
-import './smallSummaryCard.css';
-import {Button} from "react-bootstrap";
-import PaidIcon from "@mui/icons-material/Paid";
 
 
 export default function SmallSummaryCard({icon, title, value, variant, callback}) {
