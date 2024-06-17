@@ -5,9 +5,9 @@ import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveC
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PaidIcon from '@mui/icons-material/Paid';
-import SummaryCard from '../../components/summaryCard';
-import SmallSummaryCard from '../../components/smallSummaryCard';
-import OrderCard from '../../components/orderCard';
+import SummaryCard from '../../components/SummaryCard';
+import SmallSummaryCard from '../../components/SmallSummaryCard';
+import OrderCard from '../../components/OrderCard';
 import {Typography} from "@mui/material";
 import BasePage from './BasePage';
 

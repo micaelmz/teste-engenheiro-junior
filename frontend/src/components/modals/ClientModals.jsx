@@ -189,6 +189,35 @@ const BaseForm = ({service, setTargetClient, title, clientObj}) => {
   );
 }
 
+export const CreateClientModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
+  return (
+      <Modal
+          open={isOpen}
+          onClose={handleClose}
+      >
+        <div className="base-modal">
+          <BaseForm
+              service={service}
+              setTargetClient={setTargetClient}
+              title={"Criando novo cliente"}
+              clientObj={clientObj}
+          />
+          <hr/>
+          <Button
+              className="btn-color-1 rounded-3"
+              onClick={() => {
+                service.create(clientObj).then(() => {
+                  handleClose();
+                });
+              }}
+          >
+            Criar
+          </Button>
+        </div>
+      </Modal>
+  );
+}
+
 export const UpdateClientModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
   return (
       <Modal
@@ -243,33 +272,4 @@ export const DeleteClientModal = ({service, isOpen, setTargetClient, handleClose
           </div>
         </div>
       </Modal>);
-}
-
-export const CreateClientModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
-  return (
-      <Modal
-          open={isOpen}
-          onClose={handleClose}
-      >
-        <div className="base-modal">
-          <BaseForm
-              service={service}
-              setTargetClient={setTargetClient}
-              title={"Criando novo cliente"}
-              clientObj={clientObj}
-          />
-          <hr/>
-          <Button
-              className="btn-color-1 rounded-3"
-              onClick={() => {
-                service.create(clientObj).then(() => {
-                  handleClose();
-                });
-              }}
-          >
-            Criar
-          </Button>
-        </div>
-      </Modal>
-  );
 }

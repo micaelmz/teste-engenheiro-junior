@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 import maleUserIllustration from '../../assets/img/user-illustration.webp';
 import {Typography} from "@mui/material";
 import StorefrontIcon from '@mui/icons-material/Storefront';
-import SideMenu from "../../components/sideMenu";
+import SideMenu from "../../components/SideMenu";
 import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 

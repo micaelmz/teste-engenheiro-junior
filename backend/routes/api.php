@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,3 +26,8 @@ Route::post('/clients', [ClientController::class, 'store']);
 Route::put('/clients/{id}', [ClientController::class, 'update']);
 Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
 
+Route::get('/products', [ProductController::class, 'index']);
+//Route::get('/products/{id}', [ClientController::class, 'show']);
+Route::post('/products', [ProductController::class, 'store']);
+//Route::put('/products/{id}', [ProductController::class, 'update']);
+//Route::delete('/products/{id}', [ProductController::class, 'destroy']);

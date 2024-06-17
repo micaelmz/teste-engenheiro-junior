@@ -6,7 +6,7 @@ import {InputGroup, Row} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
-import ClientDataTable from "../../components/dataTables/ClientDataTable";
+import ClientDataTable from "../../components/datatables/ClientDataTable";
 import {UpdateClientModal, DeleteClientModal, CreateClientModal} from "../../components/modals/ClientModals";
 import {ClientService} from "../../service/ClientService";
 
