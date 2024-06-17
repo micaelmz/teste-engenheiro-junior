@@ -32,17 +32,15 @@ class ClientService {
     }
 
     /**
-     * Deleta um cliente do banco de dados
+     * Cria um novo cliente no banco de dados
      *
-     * @param int $id ID do cliente
-     * @return bool
+     * @param array $data Dados do cliente
+     * @return Client
      */
-    public function deleteClient(int $id){
-        $client = Client::findOrFail($id);
-        $client->delete();
-        return true;
+    public function createClient(array $data) {
+        $client = Client::create($data);
+        return $client;
     }
-
 
     /**
      * Atualiza um cliente no banco de dados
@@ -54,6 +52,18 @@ class ClientService {
     public function updateClient(array $data, int $id){
         $client = Client::findOrFail($id);
         $client->update($data);
+        return true;
+    }
+
+    /**
+     * Deleta um cliente do banco de dados
+     *
+     * @param int $id ID do cliente
+     * @return bool
+     */
+    public function deleteClient(int $id){
+        $client = Client::findOrFail($id);
+        $client->delete();
         return true;
     }
 }

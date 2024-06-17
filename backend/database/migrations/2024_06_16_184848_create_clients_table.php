@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('street_name');
             $table->date('birthday');
             $table->enum('status', ['active', 'inactive']);
-            $table->integer('score');
+            $table->integer('score')->default(0);
             $table->timestamps();
         });
     }

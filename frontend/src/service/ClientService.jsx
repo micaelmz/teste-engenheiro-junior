@@ -40,6 +40,21 @@ export const ClientService = {
     }
   },
 
+  async create(clientObj) {
+    try {
+      const { id, ...body } = clientObj;
+      const states = this.getBrazilianStates();
+      const state = states.find(state => state.name === body.state_name);
+      body.state_code = state ? state.code : null;
+      body.status = "active";
+      const response = await axios.post(`${ENDPOINT}/`, body);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating client:', error);
+      throw error;
+    }
+  },
+
   async update(clientObj){
     try {
       const {id, ...body } = clientObj;

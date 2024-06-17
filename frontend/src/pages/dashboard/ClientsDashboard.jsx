@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
 import ClientDataTable from "../../components/dataTables/ClientDataTable";
-import {UpdateClientModal, DeleteClientModal} from "../../components/modals/ClientModals";
+import {UpdateClientModal, DeleteClientModal, CreateClientModal} from "../../components/modals/ClientModals";
 import {ClientService} from "../../service/ClientService";
 
 // TODO: BUG NO FILTRO DE LOCALIZATION, RESOLVER (MESMO BUG QUE OCORREU NO ORDER)
@@ -33,8 +33,9 @@ export default function ClientsDashboard() {
     spent: 0,
   }
 
-  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
   const [targetClient, setTargetClient] = useState(clientObject); // Target to edit or delete
 
@@ -42,7 +43,10 @@ export default function ClientsDashboard() {
 
 
   return (
-      <BasePage fabShow>
+      <BasePage fabShow fabCallback={()=>{
+        setTargetClient(clientObject);
+        setIsOpenCreateModal(true);
+      }}>
         <div className="card">
           <Typography variant="h6" className="text-black poppins fw-bold mb-2">
             Resumo de todos os clientes
@@ -69,6 +73,16 @@ export default function ClientsDashboard() {
               onDelete={(rowData) => {
                 setTargetClient(rowData);
                 setIsOpenDeleteModal(true);
+              }}
+          />
+          <CreateClientModal
+              service={ClientService}
+              clientObj={targetClient}
+              setTargetClient={setTargetClient}
+              isOpen={isOpenCreateModal}
+              handleClose={() => {
+                setIsOpenCreateModal(false);
+                setShouldUpdateTable(true);
               }}
           />
           <UpdateClientModal

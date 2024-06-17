@@ -22,7 +22,6 @@ class Client extends Model
         'cep',
         'street_name',
         'birthday',
-        'status',
-        'score',
+        'score'
     ];
 }

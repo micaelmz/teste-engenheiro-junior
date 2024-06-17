@@ -40,19 +40,15 @@ class ClientController extends Controller
     }
 
     /**
-     * Deleta um cliente
+     * Cria um novo cliente
      *
-     * @param int $id
+     * @param Request $request
      * @return JsonResponse
      */
-    public function destroy(int $id) : JsonResponse{
-        // todo: check for credentials
-        $deleted = $this->clientService->deleteClient($id);
+    public function store(Request $request) : JsonResponse{
+        $client = $this->clientService->createClient($request->all());
 
-        if ($deleted) {
-            return response()->json(['message' => 'Cliente deletado com sucesso']);
-        }
-        return response()->json(['message' => 'Erro ao deletar cliente'], 500);
+        return response()->json($client, 201);
     }
 
     /**
@@ -69,6 +65,22 @@ class ClientController extends Controller
             return response()->json(['message' => 'Cliente atualizado com sucesso']);
         }
         return response()->json(['message' => 'Erro ao atualizar cliente'], 500);
+    }
+
+    /**
+     * Deleta um cliente
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id) : JsonResponse{
+        // todo: check for credentials
+        $deleted = $this->clientService->deleteClient($id);
+
+        if ($deleted) {
+            return response()->json(['message' => 'Cliente deletado com sucesso']);
+        }
+        return response()->json(['message' => 'Erro ao deletar cliente'], 500);
     }
 }
 

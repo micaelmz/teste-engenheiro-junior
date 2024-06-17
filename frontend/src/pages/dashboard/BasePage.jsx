@@ -11,12 +11,12 @@ import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 
 
-export default function BasePage({children, fabShow}) {
+export default function BasePage({children, fabShow, fabCallback}) {
 
   return (
       <div className="bg-color-1 min-h-100 min-vh-100 m-0 p-0">
         {fabShow &&
-            <Fab aria-label="add" style={{position: 'fixed', right: '2rem', bottom: '2rem', color: "white", backgroundColor: "#662ba0"}}>
+            <Fab onClick={fabCallback} aria-label="add" style={{position: 'fixed', right: '2rem', bottom: '2rem', color: "white", backgroundColor: "#662ba0"}}>
               <AddIcon />
             </Fab>
         }
