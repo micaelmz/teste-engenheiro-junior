@@ -38,7 +38,7 @@ class Client extends Model
     /**
      * Define a relação hasMany com Order.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function orders()
     {

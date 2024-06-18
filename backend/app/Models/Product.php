@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -25,8 +26,6 @@ class Product extends Model
      *
      * @var array
      */
-
-
     protected $hidden = [
         'orders',
     ];
@@ -34,7 +33,7 @@ class Product extends Model
     /**
      * Define a relação hasMany com Order.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function orders()
     {
