@@ -122,9 +122,9 @@ const BaseForm = ({productObj, setImageFile, setTargetProduct, enableImageInput,
             <Form.Group className="mb-3" controlId="formCurrency">
               <Form.Label style={{color: "#c5c5c5"}}>Quantidade em Estoque</Form.Label>
               <Form.Control
-                  name="stock_quantity"
+                  name="quantity"
                   type="number"
-                  value={productObj.stock_quantity}
+                  value={productObj.quantity}
                   onChange={handleChange}
               />
             </Form.Group>

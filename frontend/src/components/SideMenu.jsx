@@ -61,12 +61,17 @@ export default function SideMenu() {
             </Link>
           </li>
           <hr/>
-          <div className="d-flex justify-content-center">
-            <Button className="btn-color-1 bg-color-35 border-0 fw-semibold w-50" style={{height: "50px", marginTop: "2rem"}}>
-              <LogoutOutlinedIcon/>
-              Sair
-            </Button>
-          </div>
+          <Link to="/">
+            <div className="d-flex justify-content-center">
+              <Button className="btn-color-1 bg-color-35 border-0 fw-semibold w-50" style={{
+                height: "50px",
+                marginTop: "2rem"
+              }}>
+                <LogoutOutlinedIcon/>
+                Sair
+              </Button>
+            </div>
+          </Link>
         </ul>
       </Row>
   );

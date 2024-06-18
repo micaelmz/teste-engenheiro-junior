@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button} from "react-bootstrap";
+import {Link} from "react-router-dom";
 
 
 export default function SummaryCard({icon, title, value, variant, callback}) {
@@ -22,8 +23,10 @@ export default function SummaryCard({icon, title, value, variant, callback}) {
   return (
       <div className={`p-4 rounded-3 ${variants[variant].bgcolor}`}>
         <div className="d-flex justify-content-between">
-          {React.cloneElement(icon, { className: `p-2 fs-1 rounded-3 ${variants[variant].iconColors}` })}
-          <Button onClick={callback} className={`border-0 fw-semibold ${variants[variant].btnbg}`}>Detalhes</Button>
+          {React.cloneElement(icon, {className: `p-2 fs-1 rounded-3 ${variants[variant].iconColors}`})}
+          <Link to={callback}>
+            <Button onClick={callback} className={`border-0 fw-semibold ${variants[variant].btnbg}`}>Detalhes</Button>
+          </Link>
         </div>
         <p className={`fs-3 poppins fw-semibold mt-3 mb-1 ${variants[variant].titleColor}`}>{value}</p>
         <p className={`fs-5 poppins mb-0 fw-semibold ${variants[variant].valueColor}`}>{title}</p>
