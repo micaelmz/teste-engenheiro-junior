@@ -35,6 +35,9 @@ export default function ClientsDashboard() {
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const [clients, setClients] = useState(null);
 
   const [targetClient, setTargetClient] = useState(clientObject); // Target to edit or delete
 
@@ -42,7 +45,7 @@ export default function ClientsDashboard() {
 
 
   return (
-      <BasePage fabShow fabCallback={()=>{
+      <BasePage fabShow fabCallback={() => {
         setTargetClient(clientObject);
         setIsOpenCreateModal(true);
       }}>
@@ -55,14 +58,23 @@ export default function ClientsDashboard() {
           </Typography>
 
           <InputGroup className="mb-3">
-            <Form.Control placeholder="Digite sua pesquisa"/>
-            <Button className="btn-color-1 rounded-4 rounded-start">
+            <Form.Control value={searchQuery} onChange={(e) => {
+              setSearchQuery(e.target.value)
+            }} placeholder="Digite sua pesquisa"/>
+            <Button className="btn-color-1 rounded-4 rounded-start" onClick={() => {
+              ClientService.search(searchQuery).then((response) => {
+                  setClients(response);
+                });
+              }
+            }>
               <SearchOutlinedIcon/>
             </Button>
           </InputGroup>
 
           <ClientDataTable
               service={ClientService}
+              clients={clients}
+              setClients={setClients}
               shouldUpdateTable={shouldUpdateTable}
               setShouldUpdateTable={setShouldUpdateTable}
               onUpdate={(rowData) => {

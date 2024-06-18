@@ -34,6 +34,10 @@ export default function OrdersDashboard() {
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
+  const [orders, setOrders] = useState(null);
+
+  const [searchQuery, setSearchQuery] = useState('');
+
   const [targetOrder, setTargetOrder] = useState();
 
   const [shouldUpdateTable, setShouldUpdateTable] = useState(false);
@@ -57,12 +61,27 @@ export default function OrdersDashboard() {
         <div className="card">
           <Typography variant="h6" className="text-black poppins fw-bold mb-4">Lista de todos os pedidos</Typography>
           <InputGroup className="mb-3">
-            <Form.Control placeholder="Digite sua pesquisa"/>
-            <Button className="btn-color-1 rounded-4 rounded-start">
+            <Form.Control value={searchQuery} onChange={(e) => {
+              setSearchQuery(e.target.value)
+            }} placeholder="Digite sua pesquisa"/>
+            <Button className="btn-color-1 rounded-4 rounded-start" onClick={() => {
+              OrderService.search(searchQuery).then((response) => {
+                const formatOrderData = (data) => {
+                  return [...(data || [])].map((d) => {
+                    d.updated_at = new Date(d.updated_at);
+                    return d;
+                  });
+                };
+                setOrders(formatOrderData(response));
+              });
+            }
+            }>
               <SearchOutlinedIcon/>
             </Button>
           </InputGroup>
           <OrderDataTable
+              orders={orders}
+              setOrders={setOrders}
               setShouldUpdateTable={setShouldUpdateTable}
               shouldUpdateTable={shouldUpdateTable}
               service={OrderService}

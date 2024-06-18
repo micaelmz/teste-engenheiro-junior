@@ -32,7 +32,7 @@ export default function BasePage({children, fabShow, fabCallback}) {
               </Link>
             </Col>
             <Col xs={7} className="d-flex align-items-center">
-              <input type="text" className="form-control p-3" placeholder="Buscar"/>
+              <input title="Utilize a busca das paginas" disabled type="text" className="form-control p-3" placeholder="Buscar"/>
             </Col>
             <Col xs={3} className="d-flex align-items-center justify-content-end">
               <img src={maleUserIllustration} alt="Usuário" className="rounded-circle" style={{width: "3rem"}}/>
