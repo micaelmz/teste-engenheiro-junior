@@ -16,7 +16,11 @@ class ClientService {
      */
     public function getAllClients() {
         $clients = Client::all();
+        $this->formatClients($clients);
+        return $clients;
+    }
 
+    private function formatClients($clients){
         // Itera pelos clientes para ajustar a relação de orders apenas com status 'paid'
         foreach ($clients as $client) {
             // Carrega apenas as orders 'paid' para o cliente atual
@@ -33,8 +37,6 @@ class ClientService {
             // Adiciona a variável total_spent ao cliente
             $client->total_spent = $totalSpent;
         }
-
-        return $clients;
     }
 
     /**
@@ -82,5 +84,11 @@ class ClientService {
         $client = Client::findOrFail($id);
         $client->delete();
         return true;
+    }
+
+    public function searchOrders($query) {
+        $clients = Client::where('name', 'like', "%$query%")->get();
+        $this->formatClients($clients);
+        return $clients;
     }
 }
