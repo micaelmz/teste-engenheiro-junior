@@ -90,8 +90,7 @@ export default function ClientDataTable({service, onUpdate, onDelete, shouldUpda
   };
 
   const totalSpentBodyTemplate = (rowData) => {
-    // TODO: INSERIR O VALOR REAL
-    return formatCurrency(0);
+    return formatCurrency(rowData.total_spent);
   };
 
   const statusBodyTemplate = (rowData) => {
