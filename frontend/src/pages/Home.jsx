@@ -17,8 +17,9 @@ export default function Home() {
                 Ordenai: seu sistema de gerenciamento de pedidos online organizado e eficiente!
               </p>
               <div className="flex">
-                <Link to="/login"><Button className="w-25 btn-color-1 mt-4 me-4">Fazer Login</Button></Link>
-                <Link to="/register"><Button className="w-25 btn-color-2 mt-4">Cadastrar-se</Button></Link>
+                <Link to="/dashboard"><Button className="w-25 btn-color-1 me-4 mt-4">Dashboard</Button></Link>
+                <Link to="/login"><Button className="w-25 btn-color-2 mt-4 me-4">Fazer Login</Button></Link>
+                <Link to="/register"><Button className="w-25 btn-color-3 mt-4">Cadastrar-se</Button></Link>
               </div>
             </div>
           </Col>
