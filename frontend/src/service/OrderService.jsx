@@ -34,6 +34,21 @@ export const OrderService = {
     }
   },
 
+  async search(query) {
+    try {
+      const response = await axios.get(`${ENDPOINT}/search`, {
+        params: {
+          query: query
+        }
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error searching orders:', error);
+      throw error;
+    }
+  },
+
   async delete(orderId) {
     try {
       const response = await axios.delete(`${ENDPOINT}/${orderId}/`);

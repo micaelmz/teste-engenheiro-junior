@@ -11,7 +11,7 @@ export const ProductService = {
       description: '',
       price: 0,
       sku: '',
-      stock_quantity: 0,
+      quantity: 0,
       status: '',
       image: null,
       created_at: '',
@@ -22,7 +22,7 @@ export const ProductService = {
   async getData() {
     try {
       const response = await axios.get(ENDPOINT);
-      return response.data;
+      return response.data.reverse();
     } catch (error) {
       console.error('Error fetching clients data:', error);
       throw error;
@@ -31,6 +31,7 @@ export const ProductService = {
 
   async create(productObj, imageFile) {
     try {
+      console.log(productObj);
       const formData = new FormData();
 
       Object.keys(productObj).forEach(key => {
@@ -59,7 +60,7 @@ export const ProductService = {
       const response = await axios.put(`${ENDPOINT}/${productObj.id}`, productObj);
       return response.data;
     } catch (error) {
-      console.error('Error creating product:', error);
+      console.error('Error updating product:', error);
       throw error;
     }
   },
@@ -74,5 +75,23 @@ export const ProductService = {
     }
   },
 
+  async search(query) {
+    try {
 
+      if (!query) {
+        return this.getData();
+      }
+
+      const response = await axios.get(`${ENDPOINT}/search`, {
+        params: {
+          query: query
+        }
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error searching products:', error);
+      throw error;
+    }
+  },
 }

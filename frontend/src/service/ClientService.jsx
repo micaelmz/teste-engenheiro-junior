@@ -76,6 +76,21 @@ export const ClientService = {
     }
   },
 
+  async search(query) {
+    try {
+      const response = await axios.get(`${ENDPOINT}/search`, {
+        params: {
+          query: query
+        }
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error searching clients:', error);
+      throw error;
+    }
+  },
+
   getCustomersSmall() {
     return Promise.resolve(this.getData().slice(0, 10));
   },
