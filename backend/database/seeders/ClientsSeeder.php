@@ -29,7 +29,7 @@ class ClientsSeeder extends Seeder
             'cep' => '48700-000',
             'street_name' => 'Rua Exemplo n 1',
             'birthday' => '2001-04-21',
-            'status' => 'inactive',
+            'status' => 'active',
             'score' => 750,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
