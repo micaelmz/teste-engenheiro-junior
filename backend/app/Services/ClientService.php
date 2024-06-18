@@ -17,6 +17,23 @@ class ClientService {
     public function getAllClients() {
         $clients = Client::all();
 
+        // Itera pelos clientes para ajustar a relação de orders apenas com status 'paid'
+        foreach ($clients as $client) {
+            // Carrega apenas as orders 'paid' para o cliente atual
+            $client->load(['orders' => function ($query) {
+                $query->where('status', 'paid');
+            }]);
+
+            // Calcula o total gasto pelo cliente baseado nas orders 'paid'
+            $totalSpent = 0;
+            foreach ($client->orders as $order) {
+                $totalSpent += $order->product->price;
+            }
+
+            // Adiciona a variável total_spent ao cliente
+            $client->total_spent = $totalSpent;
+        }
+
         return $clients;
     }
 
