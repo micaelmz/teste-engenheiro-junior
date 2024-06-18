@@ -65,4 +65,10 @@ class ProductController extends Controller {
 
         return response()->json(['total' => $totalProducts]);
     }
+
+    public function search(Request $request) : JsonResponse{
+        $query = $request->query('query');
+        $searchedProducts = $this->productService->searchProducts($query);
+        return response()->json($searchedProducts);
+    }
 }

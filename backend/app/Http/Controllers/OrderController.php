@@ -7,11 +7,13 @@ use App\Services\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class OrderController extends Controller{
+class OrderController extends Controller
+{
 
     protected $orderService;
 
-    public function __construct(OrderService $orderService) {
+    public function __construct(OrderService $orderService)
+    {
         $this->orderService = $orderService;
     }
 
@@ -20,59 +22,93 @@ class OrderController extends Controller{
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse {
+    public function index(): JsonResponse
+    {
         return response()->json($this->orderService->getAllOrdersFormatted());
     }
 
-    public function show(Request $request): JsonResponse{
+    public function show(Request $request): JsonResponse
+    {
         $product = $this->orderService->getOrderById($request->id);
-        if ($product === null){
+        if ($product === null) {
             return response()->json(['error' => 'Produto não encontrado'], 404);
         }
 
         return response()->json($product);
     }
 
-    public function store(Request $request): JsonResponse{
+    public function store(Request $request): JsonResponse
+    {
         $created = $this->orderService->createOrder($request);
-        if (!$created){
+        if (!$created) {
             return response()->json(['error' => 'Erro ao criar produto'], 500);
         }
 
         return response()->json(['message' => 'Produto criado com sucesso'], 201);
     }
 
-    public function update(Request $request, int $id): JsonResponse{
+    public function update(Request $request, int $id): JsonResponse
+    {
         $updated = $this->orderService->updateOrder($request, $id);
-        if (!$updated){
+        if (!$updated) {
             return response()->json(['error' => 'Erro ao atualizar produto'], 500);
         }
 
         return response()->json(['message' => 'Produto atualizado com sucesso'], 200);
     }
 
-    public function destroy(int $id): JsonResponse{
+    public function destroy(int $id): JsonResponse
+    {
         $deleted = $this->orderService->deleteOrder($id);
-        if (!$deleted){
+        if (!$deleted) {
             return response()->json(['error' => 'Erro ao deletar produto'], 500);
         }
 
         return response()->json(['message' => 'Produto deletado com sucesso'], 200);
     }
 
-    public function total(Request $request) : JsonResponse {
+    public function total(Request $request): JsonResponse
+    {
         $status = $request->query('status');
         $allOrders = $this->orderService->getAllOrdersFormatted();
         $totalOrders = count($allOrders);
 
-        if ($status) {
-            if (in_array($status, ['paid', 'pending', 'canceled'])) {
-                $totalOrders = count($this->orderService->getOrdersByStatus($status));
-            } else {
-                return response()->json(['error' => 'Invalid status provided'], 400);
-            }
-        }
-
         return response()->json(['total' => $totalOrders]);
+    }
+
+    public function totalPrice(): JsonResponse
+    {
+        $paidOrders = $this->orderService->getOrderPricesByStatus('paid');
+        $canceledOrders = $this->orderService->getOrderPricesByStatus('canceled');
+        $pendingOrders = $this->orderService->getOrderPricesByStatus('pending');
+
+        return response()->json([
+            'paid' => $paidOrders,
+            'canceled' => $canceledOrders,
+            'pending' => $pendingOrders
+        ]);
+    }
+
+    public function tail(Request $request): JsonResponse
+    {
+        $quantity = $request->quantity;
+        $tailOrders = $this->orderService->getTailOrders($quantity);
+
+        return response()->json($tailOrders);
+    }
+
+    public function weeksales(): JsonResponse
+    {
+        $weekSales = $this->orderService->getWeekSales();
+
+        return response()->json($weekSales);
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $query = $request->query('query');
+        $searchedOrders = $this->orderService->searchOrders($query);
+
+        return response()->json($searchedOrders);
     }
 }

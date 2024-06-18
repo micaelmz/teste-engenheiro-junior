@@ -88,5 +88,12 @@ class ClientController extends Controller
 
         return response()->json(['total' => $totalClients]);
     }
+
+    public function search(Request $request) : JsonResponse{
+        $query = $request->query('query');
+        $searchClients = $this->clientService->searchOrders($query);
+
+        return response()->json($searchClients);
+    }
 }
 
