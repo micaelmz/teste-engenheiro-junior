@@ -12,10 +12,9 @@ import {InputNumber} from "primereact/inputnumber";
 import {Tag} from "primereact/tag";
 import {Dropdown} from "primereact/dropdown";
 
-export default function OrderDataTable({service, setShouldUpdateTable, onUpdate, onDelete, shouldUpdateTable}) {
+export default function OrderDataTable({service, orders, setOrders, setShouldUpdateTable, onUpdate, onDelete, shouldUpdateTable}) {
 
   /* STATES */
-  const [orders, setOrders] = useState(null);
   const [filters, setFilters] = useState(null);
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
@@ -32,7 +31,6 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
   const formatOrderData = (data) => {
     return [...(data || [])].map((d) => {
       d.updated_at = new Date(d.updated_at);
-      console.log('data: '+d.day);
       return d;
     });
   };
@@ -102,7 +100,7 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
   };
 
   const priceFilterTemplate = (options) => {
-    return <InputNumber value={options.price} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="BRL" locale="pt-BR"/>;
+    return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="BRL" locale="pt-BR"/>;
   };
 
   const statusFilterTemplate = (options) => {
@@ -121,7 +119,7 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
   };
 
   const statusItemTemplate = (option) => {
-    return <Tag value={option} severity={getSeverity(option)}/>;
+    return <Tag value={locateStatus(option)} severity={getSeverity(option)}/>;
   };
 
   /* UTILS */
@@ -137,8 +135,8 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
         constraints: [{value: null, matchMode: FilterMatchMode.STARTS_WITH}]
       },
       client: {value: null, matchMode: FilterMatchMode.IN},
-      date: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.DATE_IS}]},
-      price: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
+      updated_at: {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.DATE_IS}]},
+      'product.price': {operator: FilterOperator.AND, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
       status: {operator: FilterOperator.OR, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
     });
     setGlobalFilterValue('');
@@ -243,7 +241,7 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
 
         <Column
             header="Data"
-            filterField="date"
+            filterField="updated_at"
             dataType="date"
             style={{minWidth: '10rem'}}
             body={dateBodyTemplate}
@@ -252,7 +250,7 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
         />
         <Column
             header="Preço"
-            filterField="price"
+            filterField='product.price'
             dataType="numeric"
             style={{minWidth: '10rem'}}
             body={priceBodyTemplate}

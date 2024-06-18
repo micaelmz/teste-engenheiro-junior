@@ -15,9 +15,8 @@ import {FilterMatchMode, FilterOperator} from "primereact/api";
 import maleUserIllustration from '../../assets/img/male-client-illustration.png';
 import femaleUserIllustration from '../../assets/img/female-client-illustration.png';
 
-export default function ClientDataTable({service, onUpdate, onDelete, shouldUpdateTable, setShouldUpdateTable}) {
+export default function ClientDataTable({service, clients, setClients, onUpdate, onDelete, shouldUpdateTable, setShouldUpdateTable}) {
   /* STATES */
-  const [clients, setClients] = useState(null);
   const [filters, setFilters] = useState(null);
   const [loading, setLoading] = useState(false);
   const [globalFilterValue, setGlobalFilterValue] = useState('');
