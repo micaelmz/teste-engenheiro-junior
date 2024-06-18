@@ -4,8 +4,7 @@ namespace App\Services;
 
 use App\Models\Client;
 use App\Models\Product;
-use Carbon\Traits\Date;
-use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 
@@ -90,8 +89,14 @@ class OrderService
         return true;
     }
 
-    public function getOrdersByStatus(string $status): Collection {
-        return Order::where('status', $status)->get();
+    public function getOrderPricesByStatus($status): float {
+        $orders = Order::where('status', $status)->get();
+        $totalPrice = 0;
+        foreach ($orders as $order) {
+            $totalPrice += $order->product->price;
+        }
+
+        return $totalPrice;
     }
 
     public function deleteOrder(int $id): bool
@@ -100,4 +105,72 @@ class OrderService
         $order->delete();
         return true;
     }
+
+    public function searchOrders($query) {
+        $orders = Order::whereHas('product', function ($q) use ($query) {
+            $q->where('name', 'like', "%$query%");
+        })->orWhereHas('client', function ($q) use ($query) {
+            $q->where('name', 'like', "%$query%");
+        })->get();
+
+        $orders->map(function ($order) {
+            $order->product_name = $order->product->name;
+            $order->client_name = $order->client->name;
+            return $order;
+        });
+
+        return $orders;
+    }
+
+    public function getTailOrders(int $quantity){
+        $orders = Order::orderBy('updated_at', 'desc')->take($quantity)->get();
+        $orders->map(function ($order) {
+            $order->product_name = $order->product->name;
+            $order->client_name = $order->client->name;
+            return $order;
+        });
+        return $orders;
+    }
+
+    private function getOrderPricesByStatusAndWeek($status, $startDate, $endDate): float
+    {
+        // Filtrar os pedidos com base no estado e no intervalo de datas
+        $orders = Order::where('status', $status)
+            ->whereBetween('updated_at', [$startDate, $endDate])
+            ->whereHas('product')
+            ->get();
+
+        // Calcular o valor total dos pedidos filtrados
+        $totalPrice = $orders->sum(function ($order) {
+            return $order->product->price;
+        });
+
+        return $totalPrice;
+    }
+
+    public function getWeekSales(): array
+    {
+        $weekSales = [];
+
+        for ($i = 0; $i < 7; $i++) {
+            // Obter o dia de hoje menos $i dias
+            $day = Carbon::now()->subDays($i)->startOfDay();
+            $dayName = $day->format('l'); // Obtém o nome do dia (Sunday, Monday, etc.)
+
+            // Definir o início e fim do dia para a consulta
+            $startOfDay = $day->copy()->startOfDay();
+            $endOfDay = $day->copy()->endOfDay();
+
+            $weekSales[] = [
+                'name' => $dayName,
+                'paid' => $this->getOrderPricesByStatusAndWeek('paid', $startOfDay, $endOfDay),
+                'canceled' => $this->getOrderPricesByStatusAndWeek('canceled', $startOfDay, $endOfDay),
+                'pending' => $this->getOrderPricesByStatusAndWeek('pending', $startOfDay, $endOfDay),
+            ];
+        }
+
+        return $weekSales;
+    }
+
+
 }
