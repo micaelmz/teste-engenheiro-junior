@@ -92,7 +92,7 @@ const BaseForm = ({ service, setTargetOrder, title, orderObj }) => {
                 <option value="" disabled={orderObj.product_identifier_field !== ''}>
                   Selecione
                 </option>
-                <option value="email">ID</option>
+                <option value="id">ID</option>
                 <option value="sku">SKU</option>
                 <option value="name">Nome</option>
               </Form.Select>
