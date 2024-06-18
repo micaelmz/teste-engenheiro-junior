@@ -18,7 +18,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Retorna uma lista contendo todos os produtos
+     * Retorna uma lista contendo todos os pedidos formatados no formato esperado pelo frontend
      *
      * @return JsonResponse
      */
@@ -27,16 +27,25 @@ class OrderController extends Controller
         return response()->json($this->orderService->getAllOrdersFormatted());
     }
 
+    /**
+     * Retorna um pedido específico
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function show(Request $request): JsonResponse
     {
         $product = $this->orderService->getOrderById($request->id);
-        if ($product === null) {
-            return response()->json(['error' => 'Produto não encontrado'], 404);
-        }
 
         return response()->json($product);
     }
 
+    /**
+     * Cria um novo pedido no banco de dados
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function store(Request $request): JsonResponse
     {
         $created = $this->orderService->createOrder($request);
@@ -47,6 +56,13 @@ class OrderController extends Controller
         return response()->json(['message' => 'Produto criado com sucesso'], 201);
     }
 
+    /**
+     * Atualiza um pedido no banco de dados
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
     public function update(Request $request, int $id): JsonResponse
     {
         $updated = $this->orderService->updateOrder($request, $id);
@@ -57,6 +73,12 @@ class OrderController extends Controller
         return response()->json(['message' => 'Produto atualizado com sucesso'], 200);
     }
 
+    /**
+     * Deleta um pedido no banco de dados
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     public function destroy(int $id): JsonResponse
     {
         $deleted = $this->orderService->deleteOrder($id);
@@ -67,6 +89,12 @@ class OrderController extends Controller
         return response()->json(['message' => 'Produto deletado com sucesso'], 200);
     }
 
+    /**
+     * Retorna o total de pedidos
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function total(Request $request): JsonResponse
     {
         $status = $request->query('status');
@@ -76,6 +104,11 @@ class OrderController extends Controller
         return response()->json(['total' => $totalOrders]);
     }
 
+    /**
+     * Retorna a soma do valor total dos pedidos com base no status
+     *
+     * @return JsonResponse
+     */
     public function totalPrice(): JsonResponse
     {
         $paidOrders = $this->orderService->getOrderPricesByStatus('paid');
@@ -89,6 +122,12 @@ class OrderController extends Controller
         ]);
     }
 
+    /**
+     * Retorna os pedidos X mais recentes
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function tail(Request $request): JsonResponse
     {
         $quantity = $request->quantity;
@@ -97,6 +136,11 @@ class OrderController extends Controller
         return response()->json($tailOrders);
     }
 
+    /**
+     * Retorna o valor total dos pedidos da semana
+     *
+     * @return JsonResponse
+     */
     public function weeksales(): JsonResponse
     {
         $weekSales = $this->orderService->getWeekSales();
@@ -104,6 +148,12 @@ class OrderController extends Controller
         return response()->json($weekSales);
     }
 
+    /**
+     * Retorna uma lista de pedidos que tenham o nome do cliente ou do produto parecido com o termo de busca
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function search(Request $request): JsonResponse
     {
         $query = $request->query('query');

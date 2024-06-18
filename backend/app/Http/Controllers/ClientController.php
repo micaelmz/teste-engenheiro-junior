@@ -11,7 +11,8 @@ class ClientController extends Controller
 {
     protected $clientService;
 
-    public function __construct(ClientService $clientService) {
+    public function __construct(ClientService $clientService)
+    {
         $this->clientService = $clientService;
     }
 
@@ -20,7 +21,8 @@ class ClientController extends Controller
      *
      * @return JsonResponse
      */
-    public function index() : JsonResponse{
+    public function index(): JsonResponse
+    {
         $clients = $this->clientService->getAllClients();
 
         return response()->json($clients);
@@ -32,7 +34,8 @@ class ClientController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id) : JsonResponse{
+    public function show(int $id): JsonResponse
+    {
         $client = $this->clientService->getClient($id);
 
         return response()->json($client);
@@ -44,7 +47,8 @@ class ClientController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request) : JsonResponse{
+    public function store(Request $request): JsonResponse
+    {
         $client = $this->clientService->createClient($request->all());
 
         return response()->json($client, 201);
@@ -57,7 +61,8 @@ class ClientController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function update(Request $request, int $id) : JsonResponse{
+    public function update(Request $request, int $id): JsonResponse
+    {
         $updated = $this->clientService->updateClient($request->all(), $id);
 
         if ($updated) {
@@ -72,7 +77,8 @@ class ClientController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function destroy(int $id) : JsonResponse{
+    public function destroy(int $id): JsonResponse
+    {
         // todo: check for credentials
         $deleted = $this->clientService->deleteClient($id);
 
@@ -82,14 +88,27 @@ class ClientController extends Controller
         return response()->json(['message' => 'Erro ao deletar cliente'], 500);
     }
 
-    public function total() : JsonResponse{
+    /**
+     * Retorna o total de clientes
+     *
+     * @return JsonResponse
+     */
+    public function total(): JsonResponse
+    {
         $allClients = $this->clientService->getAllClients();
         $totalClients = count($allClients);
 
         return response()->json(['total' => $totalClients]);
     }
 
-    public function search(Request $request) : JsonResponse{
+    /**
+     * Retorna uma lista de clientes que tenham o nome parecido com o termo de busca
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function search(Request $request): JsonResponse
+    {
         $query = $request->query('query');
         $searchClients = $this->clientService->searchOrders($query);
 
