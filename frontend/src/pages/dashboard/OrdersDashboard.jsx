@@ -23,17 +23,24 @@ export default function OrdersDashboard() {
     product: {},
     client: {}
   }
+  const orderObjBackend = {
+    client_identifier_field: '',
+    client: '',
+    product_identifier_field: '',
+    product: '',
+    status: ''
+  }
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
-  const [targetOrder, setTargetOrder] = useState(); // Target to edit or delete
+  const [targetOrder, setTargetOrder] = useState();
 
   const [shouldUpdateTable, setShouldUpdateTable] = useState(false);
 
   return (
       <BasePage fabShow fabCallback={() => {
-        setTargetOrder(orderObj)
+        setTargetOrder(orderObjBackend)
         setIsOpenCreateModal(true);
       }}>
         <div className="card">
@@ -50,6 +57,17 @@ export default function OrdersDashboard() {
               service={OrderService}
           />
         </div>
+
+        <CreateOrderModal
+            service={OrderService}
+            isOpen={isOpenCreateModal}
+            setTargetOrder={setTargetOrder}
+            orderObj={targetOrder}
+            handleClose={() => {
+              setIsOpenCreateModal(false);
+              setShouldUpdateTable(true);
+            }}
+        />
       </BasePage>
   );
 }

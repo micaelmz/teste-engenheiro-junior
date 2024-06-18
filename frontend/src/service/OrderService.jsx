@@ -13,28 +13,13 @@ export const OrderService = {
     }
   },
 
-  getAllClientsNameAndSex() {
-    return Promise.resolve(this.getData().map(d => {
-      return {
-        name: d.client.name,
-        sex: d.client.sex
-      };
-    }));
+  async create(orderObj) {
+    try {
+      const response = await axios.post(`${ENDPOINT}/`, orderObj);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating order:', error);
+      throw error;
+    }
   },
-
-  getCustomersSmall() {
-    return Promise.resolve(this.getData().slice(0, 10));
-  },
-
-  getCustomersMedium() {
-    return Promise.resolve(this.getData().slice(0, 50));
-  },
-
-  getCustomersLarge() {
-    return Promise.resolve(this.getData().slice(0, 200));
-  },
-
-  getCustomersXLarge() {
-    return Promise.resolve(this.getData());
-  }
 };

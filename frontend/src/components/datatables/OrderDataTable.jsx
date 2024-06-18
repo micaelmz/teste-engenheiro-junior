@@ -44,6 +44,7 @@ export default function OrderDataTable({service, setShouldUpdateTable, shouldUpd
   };
 
   const formatCurrency = (value) => {
+    value = parseFloat(value);
     return value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
   };
 
@@ -67,7 +68,7 @@ export default function OrderDataTable({service, setShouldUpdateTable, shouldUpd
     return (
         <div className="flex align-items-center gap-2">
           <img alt={client.name} src={client.sex === 'm' ? maleUserIllustration : femaleUserIllustration} width="32"/>
-          <span className="ps-2">{client.name}</span>
+          <span className="ps-2">{client.name} {client.surname}</span>
         </div>
     );
   };
@@ -77,7 +78,7 @@ export default function OrderDataTable({service, setShouldUpdateTable, shouldUpd
   };
 
   const priceBodyTemplate = (rowData) => {
-    return formatCurrency(rowData.product.price);
+    return formatCurrency(rowData['product'].price);
   };
 
   const statusBodyTemplate = (rowData) => {
