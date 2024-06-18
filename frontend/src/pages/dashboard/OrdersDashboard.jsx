@@ -8,9 +8,21 @@ import {Modal, Typography} from "@mui/material";
 import {InputGroup} from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import OrderDataTable from "../../components/datatables/OrderDataTable";
+import {CreateOrderModal} from "../../components/modals/OrderModals";
 
 export default function OrdersDashboard() {
-
+  const orderObj = {
+    id: 0,
+    client_id: 0,
+    product_id: 0,
+    status: '',
+    created_at: '',
+    updated_at: '',
+    product_name: '',
+    client_name: '',
+    product: {},
+    client: {}
+  }
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
@@ -20,7 +32,10 @@ export default function OrdersDashboard() {
   const [shouldUpdateTable, setShouldUpdateTable] = useState(false);
 
   return (
-      <BasePage fabShow>
+      <BasePage fabShow fabCallback={() => {
+        setTargetOrder(orderObj)
+        setIsOpenCreateModal(true);
+      }}>
         <div className="card">
           <Typography variant="h6" className="text-black poppins fw-bold mb-4">Lista de todos os pedidos</Typography>
           <InputGroup className="mb-3">
