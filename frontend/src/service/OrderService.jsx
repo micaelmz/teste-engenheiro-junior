@@ -22,4 +22,15 @@ export const OrderService = {
       throw error;
     }
   },
+
+  async update(orderObj) {
+    try {
+      console.log(orderObj);
+      const response = await axios.put(`${ENDPOINT}/${orderObj.id}/`, orderObj);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating order:', error);
+      throw error;
+    }
+  }
 };

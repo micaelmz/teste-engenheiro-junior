@@ -147,35 +147,35 @@ export const CreateOrderModal = ({ service, isOpen, setTargetOrder, handleClose,
   );
 }
 
-// export const UpdateClientModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
-//   return (
-//       <Modal
-//           open={isOpen}
-//           onClose={handleClose}
-//       >
-//         <div className="base-modal">
-//           <BaseForm
-//               service={service}
-//               setTargetClient={setTargetClient}
-//               title={`Atualizando dados do cliente ${clientObj.name} ${clientObj.surname}`}
-//               clientObj={clientObj}
-//           />
-//           <hr/>
-//           <Button
-//               className="btn-color-1 rounded-3"
-//               onClick={() => {
-//                 service.update(clientObj).then(() => {
-//                   handleClose();
-//                 });
-//               }}
-//           >
-//             Atualizar
-//           </Button>
-//         </div>
-//       </Modal>
-//   );
-// }
-//
+export const UpdateOrderModal = ({service, isOpen, setTargetOrder, handleClose, orderObj}) => {
+  return (
+      <Modal
+          open={isOpen}
+          onClose={handleClose}
+      >
+        <div className="base-modal">
+          <BaseForm
+              service={service}
+              setTargetOrder={setTargetOrder}
+              title="Atualizando dados do pedido"
+              orderObj={orderObj}
+          />
+          <hr/>
+          <Button
+              className="btn-color-1 rounded-3"
+              onClick={() => {
+                service.update(orderObj).then(() => {
+                  handleClose();
+                });
+              }}
+          >
+            Atualizar
+          </Button>
+        </div>
+      </Modal>
+  );
+}
+
 // export const DeleteClientModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
 //   return (
 //       <Modal

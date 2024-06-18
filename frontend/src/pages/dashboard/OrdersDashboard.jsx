@@ -8,7 +8,7 @@ import {Modal, Typography} from "@mui/material";
 import {InputGroup} from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import OrderDataTable from "../../components/datatables/OrderDataTable";
-import {CreateOrderModal} from "../../components/modals/OrderModals";
+import {CreateOrderModal, UpdateOrderModal} from "../../components/modals/OrderModals";
 
 export default function OrdersDashboard() {
   const orderObj = {
@@ -38,6 +38,17 @@ export default function OrdersDashboard() {
 
   const [shouldUpdateTable, setShouldUpdateTable] = useState(false);
 
+  /* UTILS */
+  const normalizeIdColumnName = (orderData) => {
+    orderData.client = orderData.client_id;
+    orderData.product = orderData.product_id;
+    delete orderData.client_id;
+    delete orderData.product_id;
+    orderData.product_identifier_field = 'id';
+    orderData.client_identifier_field = 'id';
+    return orderData;
+  }
+
   return (
       <BasePage fabShow fabCallback={() => {
         setTargetOrder(orderObjBackend)
@@ -55,6 +66,10 @@ export default function OrdersDashboard() {
               setShouldUpdateTable={setShouldUpdateTable}
               shouldUpdateTable={shouldUpdateTable}
               service={OrderService}
+              onUpdate={(orderData) => {
+                setTargetOrder(normalizeIdColumnName(orderData));
+                setIsOpenUpdateModal(true);
+              }}
           />
         </div>
 
@@ -65,6 +80,16 @@ export default function OrdersDashboard() {
             orderObj={targetOrder}
             handleClose={() => {
               setIsOpenCreateModal(false);
+              setShouldUpdateTable(true);
+            }}
+        />
+        <UpdateOrderModal
+            service={OrderService}
+            isOpen={isOpenUpdateModal}
+            setTargetOrder={setTargetOrder}
+            orderObj={targetOrder}
+            handleClose={() => {
+              setIsOpenUpdateModal(false);
               setShouldUpdateTable(true);
             }}
         />

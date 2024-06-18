@@ -12,7 +12,7 @@ import {InputNumber} from "primereact/inputnumber";
 import {Tag} from "primereact/tag";
 import {Dropdown} from "primereact/dropdown";
 
-export default function OrderDataTable({service, setShouldUpdateTable, shouldUpdateTable}) {
+export default function OrderDataTable({service, setShouldUpdateTable, onUpdate, shouldUpdateTable}) {
 
   /* STATES */
   const [orders, setOrders] = useState(null);
@@ -248,8 +248,7 @@ export default function OrderDataTable({service, setShouldUpdateTable, shouldUpd
                       icon="pi pi-cog"
                       className="p-button-rounded rounded-5 btn-color-1-light p-mr-2"
                       onClick={() => {
-                        setEditingNow(rowData);
-                        handleOpenModal();
+                        onUpdate(rowData);
                       }}
                   />
                 </div>

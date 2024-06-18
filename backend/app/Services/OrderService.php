@@ -63,8 +63,28 @@ class OrderService
     public function updateOrder(Request $request, int $id): bool
     {
         $order = Order::findOrFail($id);
-        $order->product_id = $request->product_id;
-        $order->client_id = $request->client_id;
+        switch ($request->client_identifier_field) {
+            case 'id':
+                $order->client_id = intval($request->client);
+                break;
+            case 'document':
+                $order->client_id = Client::where('document', $request->client)->first()->id;
+                break;
+            case 'email':
+                $order->client_id = Client::where('email', $request->client)->first()->id;
+                break;
+        }
+        switch ($request->product_identifier_field) {
+            case 'id':
+                $order->product_id = intval($request->product);
+                break;
+            case 'name':
+                $order->product_id = Product::where('name', $request->product)->first()->id;
+                break;
+            case 'sku':
+                $order->product_id = Product::where('sku', $request->product)->first()->id;
+                break;
+        }
         $order->status = $request->status;
         $order->save();
         return true;
