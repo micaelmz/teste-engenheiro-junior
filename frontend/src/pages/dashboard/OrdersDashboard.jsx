@@ -8,7 +8,7 @@ import {Modal, Typography} from "@mui/material";
 import {InputGroup} from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import OrderDataTable from "../../components/datatables/OrderDataTable";
-import {CreateOrderModal, UpdateOrderModal} from "../../components/modals/OrderModals";
+import {CreateOrderModal, UpdateOrderModal, DeleteOrderModal} from "../../components/modals/OrderModals";
 
 export default function OrdersDashboard() {
   const orderObj = {
@@ -70,6 +70,10 @@ export default function OrdersDashboard() {
                 setTargetOrder(normalizeIdColumnName(orderData));
                 setIsOpenUpdateModal(true);
               }}
+              onDelete={(orderData) => {
+                setTargetOrder(normalizeIdColumnName(orderData));
+                setIsOpenDeleteModal(true);
+              }}
           />
         </div>
 
@@ -93,6 +97,17 @@ export default function OrdersDashboard() {
               setShouldUpdateTable(true);
             }}
         />
+        <DeleteOrderModal
+            service={OrderService}
+            isOpen={isOpenDeleteModal}
+            setTargetOrder={setTargetOrder}
+            orderObj={targetOrder}
+            handleClose={() => {
+              setIsOpenDeleteModal(false);
+              setShouldUpdateTable(true);
+            }}
+        />
+
       </BasePage>
   );
 }

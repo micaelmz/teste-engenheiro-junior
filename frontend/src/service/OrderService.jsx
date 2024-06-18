@@ -32,5 +32,15 @@ export const OrderService = {
       console.error('Error updating order:', error);
       throw error;
     }
+  },
+
+  async delete(orderId) {
+    try {
+      const response = await axios.delete(`${ENDPOINT}/${orderId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      throw error;
+    }
   }
 };

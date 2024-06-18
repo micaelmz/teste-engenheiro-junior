@@ -176,29 +176,29 @@ export const UpdateOrderModal = ({service, isOpen, setTargetOrder, handleClose, 
   );
 }
 
-// export const DeleteClientModal = ({service, isOpen, setTargetClient, handleClose, clientObj}) => {
-//   return (
-//       <Modal
-//           open={isOpen}
-//           onClose={handleClose}
-//       >
-//         <div className="base-modal">
-//           <p className="text-white poppins fw-bold fs-3 w-100 text-center">
-//             Deletando o cliente {clientObj.name} {clientObj.surname}
-//           </p>
-//
-//           <div className="d-flex justify-content-center gap-4">
-//             <Button className="btn-color-1 rounded-3" onClick={handleClose}>
-//               Cancelar
-//             </Button>
-//             <Button className="btn-color-4 rounded-3" onClick={() => {
-//               service.delete(clientObj.id).then(() => {
-//                 handleClose();
-//               });
-//             }}>
-//               Deletar
-//             </Button>
-//           </div>
-//         </div>
-//       </Modal>);
-// }
+export const DeleteOrderModal = ({service, isOpen, setTargetOrder, handleClose, orderObj}) => {
+  return (
+      <Modal
+          open={isOpen}
+          onClose={handleClose}
+      >
+        <div className="base-modal">
+          <p className="text-white poppins fw-bold fs-3 w-100 text-center">
+            Deseja mesmo deletar o pedido?
+          </p>
+
+          <div className="d-flex justify-content-center gap-4">
+            <Button className="btn-color-1 rounded-3" onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button className="btn-color-4 rounded-3" onClick={() => {
+              service.delete(orderObj.id).then(() => {
+                handleClose();
+              });
+            }}>
+              Deletar
+            </Button>
+          </div>
+        </div>
+      </Modal>);
+}

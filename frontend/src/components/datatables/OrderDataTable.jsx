@@ -12,7 +12,7 @@ import {InputNumber} from "primereact/inputnumber";
 import {Tag} from "primereact/tag";
 import {Dropdown} from "primereact/dropdown";
 
-export default function OrderDataTable({service, setShouldUpdateTable, onUpdate, shouldUpdateTable}) {
+export default function OrderDataTable({service, setShouldUpdateTable, onUpdate, onDelete, shouldUpdateTable}) {
 
   /* STATES */
   const [orders, setOrders] = useState(null);
@@ -21,6 +21,8 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
   const [globalFilterValue, setGlobalFilterValue] = useState('');
   const [statuses] = useState(['pending', 'paid', 'canceled']);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [sortField, setSortField] = useState(null);
+  const [sortOrder, setSortOrder] = useState(null);
   const handleOpenModal = () => setIsOpenModal(true);
   const handleCloseModal = () => setIsOpenModal(false);
   const [editingNow, setEditingNow] = useState(null);
@@ -63,6 +65,10 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
 
 
   /* BODY TEMPLATES (Table Columns) */
+  const idBodyTemplate = (rowData) => {
+    return <span className="fw-bold">{rowData.id}</span>
+  }
+
   const clientBodyTemplate = (rowData) => {
     const client = rowData.client;
     return (
@@ -136,6 +142,8 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
       status: {operator: FilterOperator.OR, constraints: [{value: null, matchMode: FilterMatchMode.EQUALS}]},
     });
     setGlobalFilterValue('');
+    setSortField('id');
+    setSortOrder(-1);
   };
 
   const clearFilter = () => {
@@ -194,7 +202,28 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
           filters={filters}
           globalFilterFields={['client.name', 'value', 'status']}
           emptyMessage="Nenhum pedido encontrado."
+          sortField={sortField}
+          sortOrder={sortOrder}
+          onSort={(e) => {
+            setSortField(e.sortField);
+            setSortOrder(e.sortOrder);
+          }}
       >
+        <Column
+            header="ID"
+            filterField="id"
+            sortable
+            sortField="id"
+            sortOrder={sortOrder}
+            onSort={(e) => {
+              setSortField(e.sortField);
+              setSortOrder(e.sortOrder);
+            }}
+            showFilterMatchModes={false}
+            filterMenuStyle={{width: '2rem'}}
+            style={{minWidth: '2rem'}}
+            body={idBodyTemplate}
+        />
         <Column
             field="product_name"
             header="Produto"
@@ -249,6 +278,21 @@ export default function OrderDataTable({service, setShouldUpdateTable, onUpdate,
                       className="p-button-rounded rounded-5 btn-color-1-light p-mr-2"
                       onClick={() => {
                         onUpdate(rowData);
+                      }}
+                  />
+                </div>
+            )}
+        />
+        <Column
+            headerStyle={{width: '8rem'}}
+            bodyStyle={{textAlign: 'center'}}
+            body={(rowData) => (
+                <div className="d-flex justify-content-center">
+                  <Button
+                      icon="pi pi-trash"
+                      className="p-button-rounded rounded-5 btn-color-4 p-mr-2"
+                      onClick={() => {
+                        onDelete(rowData);
                       }}
                   />
                 </div>
