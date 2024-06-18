@@ -59,4 +59,20 @@ class OrderController extends Controller{
 
         return response()->json(['message' => 'Produto deletado com sucesso'], 200);
     }
+
+    public function total(Request $request) : JsonResponse {
+        $status = $request->query('status');
+        $allOrders = $this->orderService->getAllOrdersFormatted();
+        $totalOrders = count($allOrders);
+
+        if ($status) {
+            if (in_array($status, ['paid', 'pending', 'canceled'])) {
+                $totalOrders = count($this->orderService->getOrdersByStatus($status));
+            } else {
+                return response()->json(['error' => 'Invalid status provided'], 400);
+            }
+        }
+
+        return response()->json(['total' => $totalOrders]);
+    }
 }

@@ -58,4 +58,11 @@ class ProductController extends Controller {
 
         return response()->json(['message' => 'Produto deletado com sucesso'], 200);
     }
+
+    public function total() : JsonResponse{
+        $allProducts = $this->productService->getAllProducts();
+        $totalProducts = count($allProducts);
+
+        return response()->json(['total' => $totalProducts]);
+    }
 }

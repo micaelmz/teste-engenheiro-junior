@@ -90,6 +90,9 @@ class OrderService
         return true;
     }
 
+    public function getOrdersByStatus(string $status): Collection {
+        return Order::where('status', $status)->get();
+    }
 
     public function deleteOrder(int $id): bool
     {

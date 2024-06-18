@@ -81,5 +81,12 @@ class ClientController extends Controller
         }
         return response()->json(['message' => 'Erro ao deletar cliente'], 500);
     }
+
+    public function total() : JsonResponse{
+        $allClients = $this->clientService->getAllClients();
+        $totalClients = count($allClients);
+
+        return response()->json(['total' => $totalClients]);
+    }
 }
 
