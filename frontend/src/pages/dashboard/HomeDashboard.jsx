@@ -14,6 +14,7 @@ import {HomeService} from "../../service/HomeService";
 
 
 export default function DashboardIndex() {
+  /* States */
   const [loading, setLoading] = useState(true);
   const [totalClients, setTotalClients] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -22,7 +23,7 @@ export default function DashboardIndex() {
   const [data, setData] = useState();
   const [totalWeekSales, setTotalWeekSales] = useState(0);
 
-
+  /* Utils */
   function translateWeekSalesData(weekSales) {
     return weekSales.map(dayData => {
       let translatedName = '';
@@ -88,6 +89,7 @@ export default function DashboardIndex() {
     }
   };
 
+  /* Life Cicle */
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);

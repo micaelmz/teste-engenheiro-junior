@@ -31,7 +31,7 @@ export default function ClientsDashboard() {
     updated_at: '',
     spent: 0,
   }
-
+  /* STATES */
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);

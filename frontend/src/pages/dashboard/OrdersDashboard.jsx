@@ -30,6 +30,7 @@ export default function OrdersDashboard() {
     product: '',
     status: ''
   }
+  /* STATES */
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
   const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
