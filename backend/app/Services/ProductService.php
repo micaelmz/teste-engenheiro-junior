@@ -18,7 +18,11 @@ class ProductService {
      */
     public function getAllProducts():Collection {
         $products = Product::all();
+        $this->formateProducts($products);
+        return $products;
+    }
 
+    private function formateProducts($products){
         // Itera pelos clientes para ajustar a relação de orders apenas com status 'paid'
         foreach ($products as $product) {
             // Carrega apenas as orders 'paid' para o cliente atual
@@ -30,10 +34,8 @@ class ProductService {
             $stockQuantity = $product->quantity - $product->orders->count();
 
             // Adiciona a variável total_spent ao cliente
-            $product->stock_quantity = $stockQuantity;
+            $product->quantity = $stockQuantity;
         }
-
-        return $products;
     }
 
     public function getProductById(int $id): Product{
@@ -61,7 +63,7 @@ class ProductService {
         $product->price = $request->price;
         $product->sku = $request->sku;
         $product->category = $request->category;
-        $product->stock_quantity = $request->stock_quantity;
+        $product->quantity = $request->quantity;
         $product->status = $request->status;
 
         $product->save();
@@ -87,7 +89,7 @@ class ProductService {
         $product->price = $request->price;
         $product->sku = $request->sku;
         $product->category = $request->category;
-        $product->stock_quantity = $request->stock_quantity;
+        $product->quantity = $request->quantity;
         $product->status = $request->status;
 
         $product->save();
@@ -98,5 +100,11 @@ class ProductService {
         $product = Product::findOrFail($id);
         $product->delete();
         return true;
+    }
+
+    public function searchProducts(string $search): Collection{
+        $products = Product::where('name', 'like', '%'.$search.'%')->get();
+        $this->formateProducts($products);
+        return $products;
     }
 }
