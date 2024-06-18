@@ -10,11 +10,14 @@ use Illuminate\Http\Request;
 
 use App\Models\Order;
 
-class OrderService
-{
+class OrderService{
 
-    public function getAllOrdersFormatted(): Collection
-    {
+    /**
+     * Retorna uma lista contendo todos os pedidos formatados no formato esperado pelo frontend
+     *
+     * @return Collection
+     */
+    public function getAllOrdersFormatted(): Collection{
         $orders = Order::all();
         $orders->map(function ($order) {
             $order->product_name = $order->product->name;
@@ -24,14 +27,25 @@ class OrderService
         return $orders;
     }
 
-    public function getOrderById(int $id): Order
-    {
+    /**
+     * Retorna uma pedido específico
+     *
+     * @param int $id ID do pedido
+     * @return Order
+     */
+    public function getOrderById(int $id): Order{
         return Order::findOrFail($id);
     }
 
-    public function createOrder(Request $request): bool
-    {
+    /**
+     * Cria um novo pedido no banco de dados
+     *
+     * @param Request $request Dados do pedido
+     * @return bool true caso o pedido tenha sido criado com sucesso
+     */
+    public function createOrder(Request $request): bool{
         $order = new Order();
+        // TODO: remover essa repetição de código para um método privado
         switch ($request->client_identifier_field) {
             case 'id':
                 $order->client_id = intval($request->client);
@@ -59,9 +73,16 @@ class OrderService
         return true;
     }
 
-    public function updateOrder(Request $request, int $id): bool
-    {
+    /**
+     * Atualiza um pedido no banco de dados
+     *
+     * @param Request $request Novos dados do pedido
+     * @param int $id ID do pedido
+     * @return bool true caso o pedido tenha sido atualizado com sucesso
+     */
+    public function updateOrder(Request $request, int $id): bool{
         $order = Order::findOrFail($id);
+        // TODO: remover essa repetição de código para um método privado
         switch ($request->client_identifier_field) {
             case 'id':
                 $order->client_id = intval($request->client);
@@ -89,7 +110,13 @@ class OrderService
         return true;
     }
 
-    public function getOrderPricesByStatus($status): float {
+    /**
+     * Retorna o valor total dos pedidos com base no status
+     *
+     * @param string $status Status dos pedidos
+     * @return float Valor total dos pedidos
+     */
+    public function getOrderPricesByStatus(string $status): float {
         $orders = Order::where('status', $status)->get();
         $totalPrice = 0;
         foreach ($orders as $order) {
@@ -99,14 +126,25 @@ class OrderService
         return $totalPrice;
     }
 
-    public function deleteOrder(int $id): bool
-    {
+    /**
+     * Deleta um pedido do banco de dados
+     *
+     * @param int $id ID do pedido
+     * @return bool true caso o pedido tenha sido deletado com sucesso
+     */
+    public function deleteOrder(int $id): bool{
         $order = Order::findOrFail($id);
         $order->delete();
         return true;
     }
 
-    public function searchOrders($query) {
+    /**
+     * Retorna uma lista de pedidos com base em um termo de busca
+     *
+     * @param string $query Termo de busca
+     * @return Collection Lista de pedidos
+     */
+    public function searchOrders(string $query) {
         $orders = Order::whereHas('product', function ($q) use ($query) {
             $q->where('name', 'like', "%$query%");
         })->orWhereHas('client', function ($q) use ($query) {
@@ -122,6 +160,12 @@ class OrderService
         return $orders;
     }
 
+    /**
+     * Retorna uma lista dos ultimos X pedidos
+     *
+     * @param int $quantity Quantidade de pedidos
+     * @return Collection Lista de pedidos
+     */
     public function getTailOrders(int $quantity){
         $orders = Order::orderBy('updated_at', 'desc')->take($quantity)->get();
         $orders->map(function ($order) {
@@ -132,8 +176,12 @@ class OrderService
         return $orders;
     }
 
-    private function getOrderPricesByStatusAndWeek($status, $startDate, $endDate): float
-    {
+    /**
+     * Retorna uma lista de valor total de pedidos, filtrados por status, em um intervalo de datas de uma semana.
+     *
+     * @return Collection Lista de pedidos
+     */
+    private function getOrderPricesByStatusAndWeek($status, $startDate, $endDate): float{
         // Filtrar os pedidos com base no estado e no intervalo de datas
         $orders = Order::where('status', $status)
             ->whereBetween('updated_at', [$startDate, $endDate])
@@ -148,8 +196,13 @@ class OrderService
         return $totalPrice;
     }
 
-    public function getWeekSales(): array
-    {
+    /**
+     * Retorna uma lista de valor total de pedidos, separado por status, em um intervalo de datas de uma semana.
+     * ex de uso: obter o total de vendas da semana
+     *
+     * @return Collection Lista de pedidos
+     */
+    public function getWeekSales(): array{
         $weekSales = [];
 
         for ($i = 0; $i < 7; $i++) {
@@ -171,6 +224,4 @@ class OrderService
 
         return $weekSales;
     }
-
-
 }

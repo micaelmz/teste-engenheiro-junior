@@ -20,21 +20,22 @@ class ClientService {
         return $clients;
     }
 
+    /**
+     * Formata a lista de clientes para incluir o total gasto por cada um, utilizando sua relação com pedidos
+     *
+     * @param Collection $clients Lista de clientes
+     */
     private function formatClients($clients){
-        // Itera pelos clientes para ajustar a relação de orders apenas com status 'paid'
         foreach ($clients as $client) {
-            // Carrega apenas as orders 'paid' para o cliente atual
             $client->load(['orders' => function ($query) {
                 $query->where('status', 'paid');
             }]);
 
-            // Calcula o total gasto pelo cliente baseado nas orders 'paid'
             $totalSpent = 0;
             foreach ($client->orders as $order) {
                 $totalSpent += $order->product->price;
             }
 
-            // Adiciona a variável total_spent ao cliente
             $client->total_spent = $totalSpent;
         }
     }
@@ -45,7 +46,7 @@ class ClientService {
      * @param int $id ID do cliente
      * @return Client
      */
-    public function getClient(int $id) {
+    public function getClient(int $id) : Client {
         $client = Client::findOrFail($id);
         return $client;
     }
@@ -86,6 +87,11 @@ class ClientService {
         return true;
     }
 
+    /**
+     * Retorna uma lista de clientes que tenham o nome parecido com o termo de busca
+     *
+     * @return Collection
+     */
     public function searchOrders($query) {
         $clients = Client::where('name', 'like', "%$query%")->get();
         $this->formatClients($clients);
