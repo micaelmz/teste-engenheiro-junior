@@ -23,7 +23,7 @@ class ProductFactory extends Factory
             'price' => $this->faker->randomFloat(2, 1, 1000),
             'sku' => $this->faker->unique()->numerify('SKU-#####'),
             'category' => $this->faker->word,
-            'stock_quantity' => $this->faker->numberBetween(1, 100),
+            'quantity' => $this->faker->numberBetween(1, 100),
             'status' => $this->faker->boolean,
             'image' => $this->faker->imageUrl(640, 480, 'products', true),
         ];

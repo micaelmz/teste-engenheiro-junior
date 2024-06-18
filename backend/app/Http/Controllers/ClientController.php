@@ -33,7 +33,6 @@ class ClientController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(int $id) : JsonResponse{
-        // todo: validation
         $client = $this->clientService->getClient($id);
 
         return response()->json($client);

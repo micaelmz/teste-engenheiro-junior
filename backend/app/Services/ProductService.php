@@ -17,7 +17,23 @@ class ProductService {
      * @return Collection
      */
     public function getAllProducts():Collection {
-        return Product::all();
+        $products = Product::all();
+
+        // Itera pelos clientes para ajustar a relação de orders apenas com status 'paid'
+        foreach ($products as $product) {
+            // Carrega apenas as orders 'paid' para o cliente atual
+            $product->load(['orders' => function ($query) {
+                $query->where('status', 'paid');
+            }]);
+
+            // Calcula o total gasto pelo cliente baseado nas orders 'paid'
+            $stockQuantity = $product->quantity - $product->orders->count();
+
+            // Adiciona a variável total_spent ao cliente
+            $product->stock_quantity = $stockQuantity;
+        }
+
+        return $products;
     }
 
     public function getProductById(int $id): Product{

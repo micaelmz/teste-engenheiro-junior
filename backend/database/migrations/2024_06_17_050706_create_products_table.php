@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2);
             $table->string('sku')->unique();
             $table->string('category');
-            $table->integer('stock_quantity');
+            $table->integer('quantity');
             $table->boolean('status')->default(true);
             $table->string('image')->nullable();
             $table->timestamps();

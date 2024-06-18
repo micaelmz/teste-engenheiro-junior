@@ -15,8 +15,29 @@ class Product extends Model
         'price',
         'sku',
         'category',
-        'stock_quantity',
+        'quantity',
         'status',
         'image'
     ];
+
+    /**
+     * Indica que a relação orders não deve ser carregada automaticamente.
+     *
+     * @var array
+     */
+
+
+    protected $hidden = [
+        'orders',
+    ];
+
+    /**
+     * Define a relação hasMany com Order.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
