@@ -1,66 +1,107 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
+import {Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PaidIcon from '@mui/icons-material/Paid';
 import SummaryCard from '../../components/SummaryCard';
 import SmallSummaryCard from '../../components/SmallSummaryCard';
 import OrderCard from '../../components/OrderCard';
-import {Typography} from "@mui/material";
+import {CircularProgress, Typography} from "@mui/material";
 import BasePage from './BasePage';
+import {HomeService} from "../../service/HomeService";
 
 
 export default function DashboardIndex() {
+  const [loading, setLoading] = useState(true);
+  const [totalClients, setTotalClients] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalSales, setTotalSales] = useState({paid: 0, canceled: 0, pending: 0});
+  const [lastOrders, setLastOrders] = useState([]);
+  const [data, setData] = useState();
+  const [totalWeekSales, setTotalWeekSales] = useState(0);
 
-  const data = [
-    {
-      name: 'Segunda',
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: 'Terça',
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: 'Qaurta',
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: 'Quinta',
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: 'Sexta',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: 'Sábado',
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: 'Domingo',
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+
+  function translateWeekSalesData(weekSales) {
+    return weekSales.map(dayData => {
+      let translatedName = '';
+
+      switch (dayData.name) {
+        case 'Monday':
+          translatedName = 'Segunda';
+          break;
+        case 'Tuesday':
+          translatedName = 'Terça';
+          break;
+        case 'Wednesday':
+          translatedName = 'Quarta';
+          break;
+        case 'Thursday':
+          translatedName = 'Quinta';
+          break;
+        case 'Friday':
+          translatedName = 'Sexta';
+          break;
+        case 'Saturday':
+          translatedName = 'Sábado';
+          break;
+        case 'Sunday':
+          translatedName = 'Domingo';
+          break;
+        default:
+          translatedName = dayData.name; // caso não seja um dia da semana conhecido, mantém o original
+      }
+
+      return {
+        name: translatedName,
+        Pago: dayData.paid,
+        Cancelado: dayData.canceled,
+        Pendente: dayData.pending
+      };
+    });
+  }
+
+  const formatCurrency = (value) => {
+    return value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+  };
+
+  const fetchData = async () => {
+    try {
+      const [totalClients, totalProducts, totalSales, lastOrders, weekSales] = await Promise.all([
+        HomeService.getTotalClients(),
+        HomeService.getTotalProducts(),
+        HomeService.getTotalSales(),
+        HomeService.getLastSales(),
+        HomeService.getWeeksales(),
+      ]);
+
+      setTotalClients(totalClients);
+      setTotalProducts(totalProducts);
+      setTotalSales(totalSales);
+      setLastOrders(lastOrders);
+
+      setData(translateWeekSalesData(weekSales));
+      setTotalWeekSales(HomeService.sumTotalWeekSales(weekSales));
+    } catch (error) {
+      console.error("Failed to fetch data", error);
+    }
+  };
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      await fetchData();
+      setLoading(false);
+    };
+    loadData();
+  }, []);
+
 
   return (
       <BasePage>
+        {loading && <CircularProgress style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />}
+
         {/* =============== INICIO CARDS DE SUMMARY =============== */}
         <Row className="mb-4">
           <Col xs={8}>
@@ -70,9 +111,8 @@ export default function DashboardIndex() {
                     icon={<ShoppingCartIcon/>}
                     variant={1}
                     title="Total de Produtos"
-                    value="100.000"
-                    callback={() => {
-                    }}
+                    value={totalProducts}
+                    callback="/dashboard/products"
                 />
               </Col>
               <Col>
@@ -80,9 +120,8 @@ export default function DashboardIndex() {
                     icon={<PeopleAltIcon/>}
                     variant={2}
                     title="Total de Clientes"
-                    value="150.000"
-                    callback={() => {
-                    }}
+                    value={totalClients}
+                    callback="/dashboard/clients"
                 />
               </Col>
             </Row>
@@ -94,7 +133,7 @@ export default function DashboardIndex() {
                     icon={<PaidIcon/>}
                     variant={1}
                     title="Vendas Confirmadas"
-                    value="R$ 30.000,00"
+                    value={formatCurrency(totalSales.paid)}
                 />
               </Row>
               <Row>
@@ -102,7 +141,7 @@ export default function DashboardIndex() {
                     icon={<PaidIcon/>}
                     variant={3}
                     title="Em Processamento"
-                    value="R$ 20.000,00"
+                    value={formatCurrency(totalSales.pending)}
                 />
               </Row>
             </div>
@@ -114,9 +153,11 @@ export default function DashboardIndex() {
           {/* =============== INICIO GRAFICO DE BARRAS =============== */}
           <Col xs={8}>
             <div className="bg-color-2 p-4 rounded-4" style={{minHeight: "60vh"}}>
-              <Typography variant="h6" className="text-black poppins fw-bold ms-3 mb-1">Vendas Semanais</Typography>
-              <Typography variant="h7" className="text-black-50 poppins fw-bold ms-3 mb-3">Total: R$
-                3000,00
+              <Typography variant="h6" className="text-black poppins fw-bold ms-3 mb-1">
+                Vendas da última semana
+              </Typography>
+              <Typography variant="h7" className="text-black-50 poppins fw-bold ms-3 mb-3">
+                Total: {formatCurrency(totalWeekSales)}
               </Typography>
 
               <ResponsiveContainer width="100%" height={400}>
@@ -133,8 +174,9 @@ export default function DashboardIndex() {
                   <YAxis/>
                   <Tooltip/>
                   <Legend/>
-                  <Bar dataKey="pv" stackId="a" fill="#1e87e3"/>
-                  <Bar dataKey="uv" stackId="a" fill="#f8eda3"/>
+                  <Bar dataKey="Pago" stackId="a" fill="#1e87e3"/>
+                  <Bar dataKey="Pendente" stackId="a" fill="#f8eda3"/>
+                  <Bar dataKey="Cancelado" stackId="a" fill="#f8a3a3"/>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -144,22 +186,16 @@ export default function DashboardIndex() {
           {/* =============== INICIO ULTIMAS VENDAS =============== */}
           <Col xs={4}>
             <div className="bg-color-2 p-4 rounded-4">
-              <Typography variant="h6" className="text-black poppins fw-bold ms-2 mb-3">Últimas Vendas</Typography>
-              <OrderCard
-                  itemName="Camisa Polo"
-                  userName="João da Silva"
-                  value="100,00"
-              />
-              <OrderCard
-                  itemName="Perfume Malbec"
-                  userName="João da Silva"
-                  value="540,00"
-              />
-              <OrderCard
-                  itemName="Bermuda Jeans"
-                  userName="João da Silva"
-                  value="150,00"
-              />
+              <Typography variant="h6" className="text-black poppins fw-bold ms-2 mb-3">
+                Últimas Vendas
+              </Typography>
+              {lastOrders.map(order => (
+                  <OrderCard
+                      itemName={order.product.name}
+                      userName={`${order.client.name} ${order.client.surname}`}
+                      value={order.product.price}
+                  />
+              ))}
             </div>
           </Col>
           {/* =============== FIM ULTIMAS VENDAS =============== */}
