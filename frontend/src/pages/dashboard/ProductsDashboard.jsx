@@ -36,6 +36,14 @@ export default function ProductsDashboard() {
     });
   };
 
+  // check if images already has a complete URL (laravel factory generated) or if has just a name and need to be concatenated with the base URL
+  const solveTypeOfImage = (image) => {
+    if (image.includes("http")){
+      return image;
+    }
+    return `${cdnProductUrl}/${image}`;
+  }
+
   /* LIFECYCLE */
   useEffect(() => {
     setTargetProduct(ProductService.getBaseObject());
@@ -68,7 +76,7 @@ export default function ProductsDashboard() {
                             name={product.name}
                             price={product.price}
                             available={product.available}
-                            image={`${cdnProductUrl}/${product.image}`}
+                            image={solveTypeOfImage(product.image)}
                             onClick={() => {
                               setTargetProduct(product);
                               setIsOpenUpdateModal(true);
